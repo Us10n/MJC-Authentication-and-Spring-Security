@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+}
+
+group 'com.epam.esm'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation project(':domain')
+    implementation project(':service')
+
+    implementation 'org.springframework.boot:spring-boot-starter-web:2.4.4'
+    implementation 'org.springframework.boot:spring-boot-starter-hateoas:2.4.4'
+    implementation 'org.springframework.boot:spring-boot-starter-validation:2.4.4'
+
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.12.3'
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.12.3'
+
+    compileOnly 'org.projectlombok:lombok:1.18.4'
+    annotationProcessor 'org.projectlombok:lombok:1.18.4'
+}
+
+test {
+    useJUnitPlatform()
+}
