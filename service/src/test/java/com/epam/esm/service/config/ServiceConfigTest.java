@@ -10,6 +10,8 @@ import com.epam.esm.repository.dao.impl.TagDaoImpl;
 import com.epam.esm.repository.dao.impl.UserDaoImpl;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.*;
+import org.springframework.security.core.parameters.P;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @ComponentScan(basePackages = {"com.epam.esm"})

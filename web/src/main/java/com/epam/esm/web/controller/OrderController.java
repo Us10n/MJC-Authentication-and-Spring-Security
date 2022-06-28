@@ -1,7 +1,7 @@
 package com.epam.esm.web.controller;
 
 import com.epam.esm.domain.dto.OrderDetailDto;
-import com.epam.esm.domain.entity.Order;
+import com.epam.esm.domain.dto.Order;
 import com.epam.esm.service.service.OrderService;
 import com.epam.esm.web.hateoas.impl.OrderHateoasAdder;
 import org.springframework.beans.factory.annotation.Autowired;

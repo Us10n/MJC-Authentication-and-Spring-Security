@@ -2,7 +2,7 @@ package com.epam.esm.service.service;
 
 import com.epam.esm.domain.dto.OrderDetailDto;
 import com.epam.esm.domain.entity.GiftCertificate;
-import com.epam.esm.domain.entity.Order;
+import com.epam.esm.domain.dto.Order;
 import com.epam.esm.domain.entity.OrderDetail;
 import com.epam.esm.domain.entity.User;
 import com.epam.esm.repository.dao.GiftCertificateDao;
@@ -43,7 +43,7 @@ class OrderServiceImplTest {
     private GiftCertificateDao giftCertificateDao;
 
     LocalDateTime sampleDate = LocalDateTime.parse("2022-04-11T10:00:11.156");
-    User sampleUser = new User(1, "Nick", null);
+    User sampleUser = new User(1, "Nick", null,null,null,null);
     GiftCertificate sampleCertificate = new GiftCertificate(
             1, "test1", "test1", 1.1, 1, sampleDate, sampleDate, null
     );

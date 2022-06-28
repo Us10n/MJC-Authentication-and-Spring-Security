@@ -20,7 +20,7 @@ import java.util.Map;
 
 @ControllerAdvice
 public class ApiExceptionHandler {
-    public static final String VERSION = " custom";
+    private static final String VERSION = " custom";
     private static final String ERROR_MESSAGE = "errorMessage";
     private static final String ERROR_CODE = "errorCode";
     private static final String WRONG_ARGS_TYPE = "info.wrong.args.type";

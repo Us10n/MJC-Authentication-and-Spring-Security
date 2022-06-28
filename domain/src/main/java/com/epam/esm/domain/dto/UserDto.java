@@ -17,6 +17,9 @@ import java.util.List;
 @Relation(collectionRelation = "users")
 public class UserDto extends RepresentationModel<UserDto> {
     private long userId;
-    private String userName;
+    private String email;
+    private String password;
+    private String name;
+    private UserRole role;
     private List<OrderDetailDto> orders;
 }

@@ -30,7 +30,7 @@ class OrderConverterTest {
     public void setup() {
         LocalDateTime sampleDate = LocalDateTime.parse("2022-04-11T10:00:11.156");
 
-        sampleUser = new User(1, "Rick", null);
+        sampleUser = new User(1, "Rick", null,null,null,null);
         sampleCertificate = new GiftCertificate(1, "test1", "test1", 1.2, 1, sampleDate, sampleDate, null);
         orderDetail = new OrderDetail(1, 1.1, sampleDate, sampleUser,sampleCertificate);
         orderDetailDto=new OrderDetailDto(1,1.1,sampleDate,1,1);

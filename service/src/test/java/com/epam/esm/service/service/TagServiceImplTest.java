@@ -103,7 +103,7 @@ class TagServiceImplTest {
 
     @Test
     void findWidelyUsedTagOfUserWithHighestCostOfAllOrders() {
-        TagDto actual = tagService.findWidelyUsedTagOfUserWithHighestCostOfAllOrders(1,10).get(0);
+        TagDto actual = (TagDto) tagService.findWidelyUsedTagOfUserWithHighestCostOfAllOrders(1,10).getContent().toArray()[0];
         TagDto expected = tagDtos.get(0);
         Assertions.assertEquals(expected, actual);
     }

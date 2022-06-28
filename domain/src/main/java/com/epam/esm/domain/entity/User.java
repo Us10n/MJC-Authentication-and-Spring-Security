@@ -22,8 +22,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "password")
+    private String password;
+
     @Column(name = "name")
     private String name;
+
+    @Column(name = "role")
+    private String role;
 
     @OneToMany(mappedBy = "user")
     private List<OrderDetail> orders;

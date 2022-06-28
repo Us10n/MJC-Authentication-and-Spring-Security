@@ -7,6 +7,15 @@ import org.springframework.hateoas.PagedModel;
  * The interface User service.
  */
 public interface UserService {
+
+    /**
+     * Create T type object.
+     *
+     * @param object object to create instance of
+     * @return the t
+     */
+    UserDto create(UserDto object);
+
     /**
      * Read all paged model.
      *
@@ -23,4 +32,6 @@ public interface UserService {
      * @return the user dto
      */
     UserDto readById(long id);
+
+    UserDto readByEmail(String email);
 }

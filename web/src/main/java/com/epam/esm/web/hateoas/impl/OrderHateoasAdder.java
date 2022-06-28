@@ -1,7 +1,7 @@
 package com.epam.esm.web.hateoas.impl;
 
 import com.epam.esm.domain.dto.OrderDetailDto;
-import com.epam.esm.domain.entity.Order;
+import com.epam.esm.domain.dto.Order;
 import com.epam.esm.web.controller.OrderController;
 import com.epam.esm.web.hateoas.HateoasAdder;
 import org.springframework.hateoas.PagedModel;

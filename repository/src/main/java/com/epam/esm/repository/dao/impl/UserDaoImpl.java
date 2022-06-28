@@ -20,15 +20,31 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserDaoImpl implements UserDao {
 
-    private static final String COUNT_ENTITIES_HQUERY = "SELECT count(u) FROM User u";
+    private static final String COUNT_ENTITIES_QUERY = "SELECT count(u) FROM User u";
+    private static final String FIND_BY_EMAIL_QUERY = "SELECT u FROM User u WHERE u.email=:userEmail";
     private static final String ID = "id";
 
     @PersistenceContext
     private final EntityManager entityManager;
 
     @Override
+    public User create(User object) {
+        entityManager.persist(object);
+
+        return object;
+    }
+
+    @Override
     public Optional<User> findById(long id) {
         return Optional.ofNullable(entityManager.find(User.class, id));
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return entityManager.createQuery(FIND_BY_EMAIL_QUERY, User.class)
+                .setParameter("userEmail", email)
+                .getResultStream()
+                .findFirst();
     }
 
     @Override
@@ -49,6 +65,6 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public long countAll() {
-        return entityManager.createQuery(COUNT_ENTITIES_HQUERY, Long.class).getSingleResult();
+        return entityManager.createQuery(COUNT_ENTITIES_QUERY, Long.class).getSingleResult();
     }
 }

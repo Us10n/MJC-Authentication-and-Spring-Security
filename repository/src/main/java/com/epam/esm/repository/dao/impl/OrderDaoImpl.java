@@ -22,7 +22,7 @@ import java.util.Optional;
 public class OrderDaoImpl implements OrderDao {
 
     private static final String FIND_ORDERS_BY_USER_ID="SELECT o FROM OrderDetail o WHERE o.user.id = :userId";
-    private static final String COUNT_ENTITIES_HQUERY = "SELECT count(o) FROM OrderDetail o";
+    private static final String COUNT_ENTITIES_QUERY = "SELECT count(o) FROM OrderDetail o";
     private static final String ID = "id";
 
     @PersistenceContext
@@ -58,7 +58,7 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     public long countAll() {
-        return entityManager.createQuery(COUNT_ENTITIES_HQUERY, Long.class).getSingleResult();
+        return entityManager.createQuery(COUNT_ENTITIES_QUERY, Long.class).getSingleResult();
     }
 
     @Override

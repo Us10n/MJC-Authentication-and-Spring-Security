@@ -8,6 +8,14 @@ import java.util.Optional;
 public interface UserDao {
 
     /**
+     * Create {@link User} object instance in database.
+     *
+     * @param object object to create in database
+     * @return {@link Optional Optional.ofNullable()} of created object
+     */
+    User create(User object);
+
+    /**
      * Find object instance in database by id.
      *
      * @param id object id
@@ -30,4 +38,6 @@ public interface UserDao {
      * @return amount
      */
     long countAll();
+
+    Optional<User> findByEmail(String email);
 }

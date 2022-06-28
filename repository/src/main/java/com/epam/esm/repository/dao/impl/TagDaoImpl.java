@@ -13,6 +13,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Future;
 
 /**
  * The type Tag dao.
@@ -49,7 +50,7 @@ public class TagDaoImpl implements TagDao {
             "    ORDER BY count(tags.name) DESC limit 1 " +
             ") " +
             "ORDER BY count(tags.name) DESC";
-    private static final String COUNT_ENTITIES_HQUERY = "SELECT count(t) FROM Tag t";
+    private static final String COUNT_ENTITIES_QUERY = "SELECT count(t) FROM Tag t";
     private static final String ID = "id";
 
 
@@ -95,7 +96,7 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public long countAll() {
-        return entityManager.createQuery(COUNT_ENTITIES_HQUERY, Long.class).getSingleResult();
+        return entityManager.createQuery(COUNT_ENTITIES_QUERY, Long.class).getSingleResult();
     }
 
     @Override

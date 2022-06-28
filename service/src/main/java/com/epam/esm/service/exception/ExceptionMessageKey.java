@@ -27,6 +27,10 @@ public final class ExceptionMessageKey {
     public static final String TAG_NOT_FOUND = "tag.notFound";
     public static final String TAGS_NOT_FOUND="tags.notFound";
 
+    public static final String BAD_USER_EMAIL = "user.badEmail";
+    public static final String BAD_USER_PASSWORD = "user.badPassword";
+    public static final String BAD_USER_NAME = "user.badName";
+    public static final String USER_EXIST = "user.alreadyExist";
     public static final String USER_NOT_FOUND = "user.notFound";
 
     public static final String BAD_ORDER_USER_ID = "order.badUserId";

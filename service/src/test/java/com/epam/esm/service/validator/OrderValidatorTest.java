@@ -1,6 +1,6 @@
 package com.epam.esm.service.validator;
 
-import com.epam.esm.domain.entity.Order;
+import com.epam.esm.domain.dto.Order;
 import com.epam.esm.service.exception.ExceptionHolder;
 import com.epam.esm.service.util.validator.OrderValidator;
 import org.junit.jupiter.api.Assertions;

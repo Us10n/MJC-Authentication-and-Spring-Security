@@ -27,7 +27,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
             "FROM gift_certificates";
     private static final String FIND_BY_NAME_QUERY = FIND_ALL_QUERY + " WHERE name=:certName";
     private static final String DETACH_ALL_TAGS_BY_ID_QUERY = "DELETE FROM gift_certificate_tags WHERE gift_certificate_id=:certificateId";
-    private static final String COUNT_ENTITIES_HQUERY = "SELECT count(crt) FROM GiftCertificate crt";
+    private static final String COUNT_ENTITIES_QUERY = "SELECT count(crt) FROM GiftCertificate crt";
     private static final String ID = "id";
 
     @PersistenceContext
@@ -72,7 +72,7 @@ public class GiftCertificateDaoImpl implements GiftCertificateDao {
 
     @Override
     public long countAll() {
-        return entityManager.createQuery(COUNT_ENTITIES_HQUERY, Long.class).getSingleResult();
+        return entityManager.createQuery(COUNT_ENTITIES_QUERY, Long.class).getSingleResult();
     }
 
     @Override
