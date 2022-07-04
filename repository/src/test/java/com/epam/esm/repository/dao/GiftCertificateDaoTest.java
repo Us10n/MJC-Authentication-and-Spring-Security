@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,13 +18,17 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-@SpringBootTest(classes = TestConfig.class)
 @ActiveProfiles("test")
-@SpringBootApplication
+@SpringBootTest(classes = TestConfig.class)
 class GiftCertificateDaoTest {
 
     @Autowired
     GiftCertificateDao giftCertificateDao;
+
+    @Test
+    void contextLoads(ApplicationContext context) {
+        Assertions.assertNotNull(context);
+    }
 
     @Test
     void create() {

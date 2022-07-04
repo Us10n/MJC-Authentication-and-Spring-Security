@@ -20,21 +20,9 @@ public class DaoConfig {
     }
 
     @Bean
-    @Profile("dev")
-    public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(dataSource());
-    }
-
-    @Bean
     @Profile("prod")
     public DataSource dataSourceProd() {
         HikariConfig hikariConfig = new HikariConfig("/dbProd.properties");
         return new HikariDataSource(hikariConfig);
-    }
-
-    @Bean
-    @Profile("prod")
-    public JdbcTemplate jdbcTemplateProd() {
-        return new JdbcTemplate(dataSourceProd());
     }
 }

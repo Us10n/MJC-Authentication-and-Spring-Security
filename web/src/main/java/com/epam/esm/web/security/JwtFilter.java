@@ -1,8 +1,7 @@
 package com.epam.esm.web.security;
 
-import com.epam.esm.domain.dto.UserDto;
 import com.epam.esm.service.converter.impl.UserConverter;
-import com.epam.esm.service.service.UserService;
+import com.epam.esm.service.service.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,24 +22,26 @@ public class JwtFilter extends OncePerRequestFilter {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
 
-    private UserService userService;
+    private UserDetailService userDetailService;
     private UserConverter userConverter;
+    private JwtUtil jwtUtil;
 
     @Autowired
-    public JwtFilter(UserService userService, UserConverter userConverter) {
+    public JwtFilter(UserDetailService userDetailService, UserConverter userConverter,
+                     JwtUtil jwtUtil) {
         this.userConverter = userConverter;
-        this.userService = userService;
+        this.userDetailService = userDetailService;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = getTokenFromRequest(request);
 
-        if (token != null && JwtUtil.isTokenValid(token)) {
-            String login = JwtUtil.getLoginFromToken(token);
+        if (token != null && jwtUtil.isTokenValid(token)) {
+            String login = jwtUtil.getLoginFromToken(token);
 
-            UserDto userDto = userService.readByEmail(login);
-            UserDetails userDetails = userConverter.convertToDetails(userDto);
+            UserDetails userDetails = userDetailService.readByEmail(login);
 
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(auth);
@@ -51,9 +52,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private String getTokenFromRequest(HttpServletRequest request) {
         String rawToken = request.getHeader(AUTHORIZATION);
-
-        return hasText(rawToken) && rawToken.startsWith(BEARER)
-                ? rawToken.substring(7)
+        return hasText(rawToken)
+                ? rawToken
                 : null;
     }
 

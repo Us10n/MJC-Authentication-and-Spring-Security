@@ -1,7 +1,7 @@
 package com.epam.esm.service.converter;
 
-import com.epam.esm.domain.dto.OrderDetailDto;
 import com.epam.esm.domain.dto.UserDto;
+import com.epam.esm.domain.dto.UserRole;
 import com.epam.esm.domain.entity.GiftCertificate;
 import com.epam.esm.domain.entity.OrderDetail;
 import com.epam.esm.domain.entity.User;
@@ -31,7 +31,7 @@ class UserConverterTest {
     @BeforeAll
     public void setup() {
         LocalDateTime sampleDate = LocalDateTime.parse("2022-04-11T10:00:11.156");
-        User userTmp = new User(1, "Rick", null,null,null,null);
+        User userTmp = new User(1, "Rick", null, null, null, null);
         GiftCertificate giftCertificate = new GiftCertificate(
                 1, "test1", "test1", 1.2, 1, sampleDate, sampleDate, null
         );
@@ -39,24 +39,23 @@ class UserConverterTest {
         List<OrderDetail> orders = new ArrayList<>();
         orders.add(new OrderDetail(1, 1.1, sampleDate, userTmp, giftCertificate));
 
-        List<OrderDetailDto> orderDtos = new ArrayList<>();
-        orderDtos.add(new OrderDetailDto(1, 1.1, sampleDate, 1, 1));
-
-
-        user = new User(1, "Rick", null,null,null,orders);
-        userDto = new UserDto(1, "Rick",null,null,null, orderDtos);
+        user = new User(1, "Rick@email.com", "password", "Rick", UserRole.USER.toString(), orders);
+        userDto = new UserDto(1, "Rick@email.com", "password", "Rick", UserRole.USER);
     }
 
     @Test
     void convertToDto() {
         UserDto actual = userConverter.convertToDto(user);
-        UserDto expected = userDto;
+        UserDto expected = new UserDto(1, "Rick@email.com", "password", "Rick", UserRole.USER);
 
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
     void convertToEntity() {
-        Assertions.assertDoesNotThrow(()->userConverter.convertToEntity(userDto));
+        User actual = userConverter.convertToEntity(userDto);
+        User expected = new User(1, "Rick@email.com", "password", "Rick", UserRole.USER.toString(), null);
+
+        Assertions.assertEquals(expected, actual);
     }
 }

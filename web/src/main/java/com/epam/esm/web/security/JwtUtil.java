@@ -5,17 +5,21 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.experimental.UtilityClass;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 
-@UtilityClass
+@Component
 public class JwtUtil {
-    @Value("${jwt.secret:default}")
+    @Value("${jwt.secret}")
     private String tokenSecret;
-    @Value("${jwt.lifetime:60}")
+    @Value("${jwt.lifetime}")
     private long tokenLifetime;
+
+    public JwtUtil() {
+    }
 
     public String generateToken(String login) {
         Date expirationDate = Date.from(LocalDateTime.now().plusMinutes(tokenLifetime)

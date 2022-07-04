@@ -4,6 +4,7 @@ import com.epam.esm.domain.dto.UserDto;
 import com.epam.esm.domain.dto.UserRole;
 import com.epam.esm.domain.entity.User;
 import com.epam.esm.repository.dao.UserDao;
+import com.epam.esm.repository.dao.impl.UserDaoImpl;
 import com.epam.esm.service.config.ServiceConfigTest;
 import com.epam.esm.service.converter.impl.OrderConverter;
 import com.epam.esm.service.converter.impl.UserConverter;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -26,14 +28,11 @@ import java.util.List;
 import java.util.Optional;
 
 @ActiveProfiles("test")
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = ServiceConfigTest.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@SpringBootApplication
 class UserServiceImplTest {
 
-    @Autowired
-    private UserDao userDao;
+    @Mock
+    private UserDao userDao=Mockito.mock(UserDaoImpl.class);
     private UserService userService;
     List<User> userList = new ArrayList<>();
 
@@ -54,7 +53,7 @@ class UserServiceImplTest {
     @Test
     void readAll() {
         UserDto actual = new ArrayList<UserDto>(userService.readAll(1, 10).getContent()).get(0);
-        UserDto expected = new UserDto(1, "email@email.com", "qwerty1234", "Rick", UserRole.USER, null);
+        UserDto expected = new UserDto(1, "email@email.com", "qwerty1234", "Rick", UserRole.USER);
 
         Assertions.assertEquals(expected, actual);
     }
@@ -62,7 +61,7 @@ class UserServiceImplTest {
     @Test
     void readById() {
         UserDto actual = userService.readById(1);
-        UserDto expected = new UserDto(1, "email@email.com", "qwerty1234", "Rick", UserRole.USER, null);
+        UserDto expected = new UserDto(1, "email@email.com", "qwerty1234", "Rick", UserRole.USER);
 
         Assertions.assertEquals(expected, actual);
     }

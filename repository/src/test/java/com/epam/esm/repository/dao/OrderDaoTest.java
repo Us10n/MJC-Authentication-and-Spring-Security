@@ -11,9 +11,8 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDateTime;
 
-@SpringBootTest(classes = TestConfig.class)
 @ActiveProfiles("test")
-@SpringBootApplication
+@SpringBootTest(classes = TestConfig.class)
 class OrderDaoTest {
 
     @Autowired

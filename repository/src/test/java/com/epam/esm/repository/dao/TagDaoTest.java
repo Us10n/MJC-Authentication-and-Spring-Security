@@ -10,9 +10,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-@SpringBootTest(classes = TestConfig.class)
 @ActiveProfiles("test")
-@SpringBootApplication
+@SpringBootTest(classes = TestConfig.class)
 class TagDaoTest {
 
     @Autowired

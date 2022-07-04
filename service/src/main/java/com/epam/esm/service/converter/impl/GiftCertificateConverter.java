@@ -8,6 +8,8 @@ import com.epam.esm.service.converter.DtoEntityConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -39,10 +41,10 @@ public class GiftCertificateConverter implements DtoEntityConverter<GiftCertific
         giftCertificateDto.setDuration(object.getDuration());
         giftCertificateDto.setCreateDate(object.getCreateDate());
         giftCertificateDto.setLastUpdateDate(object.getLastUpdateDate());
-        if (object.getTags() != null) {
-            List<TagDto> tags = object.getTags().stream().map(tagConverter::convertToDto).collect(Collectors.toList());
-            giftCertificateDto.setTags(tags);
-        }
+        List<TagDto> tags = object.getTags() == null
+                ? new ArrayList<>()
+                : object.getTags().stream().map(tagConverter::convertToDto).collect(Collectors.toList());
+        giftCertificateDto.setTags(tags);
         return giftCertificateDto;
     }
 
@@ -56,10 +58,10 @@ public class GiftCertificateConverter implements DtoEntityConverter<GiftCertific
         giftCertificate.setDuration(object.getDuration());
         giftCertificate.setCreateDate(object.getCreateDate());
         giftCertificate.setLastUpdateDate(object.getLastUpdateDate());
-        if (object.getTags() != null) {
-            Set<Tag> tags = object.getTags().stream().map(tagConverter::convertToEntity).collect(Collectors.toSet());
-            giftCertificate.setTags(tags);
-        }
+        Set<Tag> tags = object.getTags() == null
+                ? new HashSet<>()
+                : object.getTags().stream().map(tagConverter::convertToEntity).collect(Collectors.toSet());
+        giftCertificate.setTags(tags);
         return giftCertificate;
     }
 }

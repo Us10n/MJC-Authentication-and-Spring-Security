@@ -11,6 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,8 +21,6 @@ import java.util.stream.Collectors;
  */
 @Component
 public class UserConverter implements DtoEntityConverter<UserDto, User> {
-
-    private static final String ROLE_PREFIX = "ROLE_";
 
     /**
      * The Order converter.
@@ -47,12 +46,12 @@ public class UserConverter implements DtoEntityConverter<UserDto, User> {
         userDto.setName(object.getName());
         userDto.setRole(UserRole.valueOf(object.getRole()));
         //todo should I remove orders from user dto?
-        if (object.getOrders() != null) {
-            List<OrderDetailDto> orders = object.getOrders().stream()
-                    .map(orderConverter::convertToDto)
-                    .collect(Collectors.toList());
-            userDto.setOrders(orders);
-        }
+//        List<OrderDetailDto> orders = object.getOrders() == null
+//                ? new ArrayList<>()
+//                : object.getOrders().stream()
+//                .map(orderConverter::convertToDto)
+//                .collect(Collectors.toList());
+//        userDto.setOrders(orders);
         return userDto;
     }
 
@@ -65,19 +64,12 @@ public class UserConverter implements DtoEntityConverter<UserDto, User> {
         user.setName(object.getName());
         user.setRole(object.getRole().toString());
         //todo should I remove orders from user dto?
-        if (object.getOrders() != null) {
-            List<OrderDetail> orders = object.getOrders().stream()
-                    .map(orderConverter::convertToEntity)
-                    .collect(Collectors.toList());
-            user.setOrders(orders);
-        }
+//        List<OrderDetail> orders = object.getOrders() == null
+//                ? new ArrayList<>()
+//                : object.getOrders().stream()
+//                .map(orderConverter::convertToEntity)
+//                .collect(Collectors.toList());
+//        user.setOrders(orders);
         return user;
-    }
-
-    public UserDetails convertToDetails(UserDto object) {
-        List<SimpleGrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority(ROLE_PREFIX
-                + object.getRole().toString()));
-
-        return new org.springframework.security.core.userdetails.User(object.getEmail(), object.getPassword(), authorities);
     }
 }

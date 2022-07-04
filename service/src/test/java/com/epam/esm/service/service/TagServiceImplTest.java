@@ -3,6 +3,7 @@ package com.epam.esm.service.service;
 import com.epam.esm.domain.dto.TagDto;
 import com.epam.esm.domain.entity.Tag;
 import com.epam.esm.repository.dao.TagDao;
+import com.epam.esm.repository.dao.impl.TagDaoImpl;
 import com.epam.esm.service.config.ServiceConfigTest;
 import com.epam.esm.service.converter.impl.TagConverter;
 import com.epam.esm.service.exception.DuplicateEntityException;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -25,15 +27,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-
 @ActiveProfiles("test")
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = ServiceConfigTest.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@SpringBootApplication
 class TagServiceImplTest {
-    @Autowired
-    private TagDao tagDao;
+
+    @Mock
+    private TagDao tagDao = Mockito.mock(TagDaoImpl.class);
 
     private TagService tagService;
     List<TagDto> tagDtos = new ArrayList<>();
@@ -58,7 +57,7 @@ class TagServiceImplTest {
         Mockito.when(tagDao.findAll(1, 3)).thenReturn(tags.subList(0, 3));
         Mockito.when(tagDao.findById(3)).thenReturn(Optional.of(tags.get(2)));
         Mockito.when(tagDao.findById(1)).thenReturn(Optional.of(tags.get(1)));
-        Mockito.when(tagDao.findWidelyUsedTagsOfUserWithHighestCostOfAllOrders(1,10)).thenReturn(tags.subList(0,1));
+        Mockito.when(tagDao.findWidelyUsedTagsOfUserWithHighestCostOfAllOrders(1, 10)).thenReturn(tags.subList(0, 1));
         Mockito.when(tagDao.create(tags.get(0))).thenReturn(tags.get(0));
         Mockito.when(tagDao.countAll()).thenReturn(8L);
 
@@ -103,7 +102,7 @@ class TagServiceImplTest {
 
     @Test
     void findWidelyUsedTagOfUserWithHighestCostOfAllOrders() {
-        TagDto actual = (TagDto) tagService.findWidelyUsedTagOfUserWithHighestCostOfAllOrders(1,10).getContent().toArray()[0];
+        TagDto actual = (TagDto) tagService.findWidelyUsedTagOfUserWithHighestCostOfAllOrders(1, 10).getContent().toArray()[0];
         TagDto expected = tagDtos.get(0);
         Assertions.assertEquals(expected, actual);
     }

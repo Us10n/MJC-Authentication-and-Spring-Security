@@ -1,6 +1,7 @@
 package com.epam.esm.service.service.impl;
 
 import com.epam.esm.domain.dto.UserDto;
+import com.epam.esm.domain.dto.UserRole;
 import com.epam.esm.domain.entity.User;
 import com.epam.esm.repository.dao.UserDao;
 import com.epam.esm.service.converter.impl.UserConverter;
@@ -60,6 +61,7 @@ public class UserServiceImpl implements UserService {
 
         String encryptedPassword = bCryptPasswordEncode.encode(object.getPassword());
         object.setPassword(encryptedPassword);
+        object.setRole(UserRole.USER);
         User userModel = userConverter.convertToEntity(object);
         User createdUser = userDao.create(userModel);
 

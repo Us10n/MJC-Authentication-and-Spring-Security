@@ -4,6 +4,7 @@ import com.epam.esm.domain.entity.User;
 import com.epam.esm.repository.dao.UserDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -28,6 +29,7 @@ public class UserDaoImpl implements UserDao {
     private final EntityManager entityManager;
 
     @Override
+    @Transactional
     public User create(User object) {
         entityManager.persist(object);
 
@@ -40,6 +42,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    @Transactional
     public Optional<User> findByEmail(String email) {
         return entityManager.createQuery(FIND_BY_EMAIL_QUERY, User.class)
                 .setParameter("userEmail", email)

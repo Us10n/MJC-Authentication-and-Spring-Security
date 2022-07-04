@@ -1,6 +1,8 @@
 package com.epam.esm.web.hateoas.impl;
 
 import com.epam.esm.domain.dto.UserDto;
+import com.epam.esm.service.converter.impl.OrderConverter;
+import com.epam.esm.web.controller.OrderController;
 import com.epam.esm.web.controller.UserController;
 import com.epam.esm.web.hateoas.HateoasAdder;
 import org.springframework.hateoas.PagedModel;
@@ -13,10 +15,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class UserHateoasAdder implements HateoasAdder<UserDto> {
 
     private static final Class<UserController> USER_CONTROLLER = UserController.class;
+    private static final Class<OrderController> ORDER_CONTROLLER = OrderController.class;
 
     @Override
     public void addLinksToEntity(UserDto entity) {
         entity.add(linkTo(methodOn(USER_CONTROLLER).readUserById(entity.getUserId())).withSelfRel().withType("GET"));
+        entity.add(linkTo(methodOn(ORDER_CONTROLLER).readOrdersByUserId(entity.getUserId(), 1, 10)).withRel("orders").withType("GET"));
     }
 
     @Override

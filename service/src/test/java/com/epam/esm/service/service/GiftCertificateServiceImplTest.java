@@ -6,6 +6,8 @@ import com.epam.esm.domain.entity.GiftCertificate;
 import com.epam.esm.domain.entity.Tag;
 import com.epam.esm.repository.dao.GiftCertificateDao;
 import com.epam.esm.repository.dao.TagDao;
+import com.epam.esm.repository.dao.impl.GiftCertificateDaoImpl;
+import com.epam.esm.repository.dao.impl.TagDaoImpl;
 import com.epam.esm.service.config.ServiceConfigTest;
 import com.epam.esm.service.converter.impl.GiftCertificateConverter;
 import com.epam.esm.service.converter.impl.TagConverter;
@@ -15,9 +17,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
@@ -27,17 +31,13 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @ActiveProfiles("test")
-@ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = ServiceConfigTest.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@SpringBootApplication
 class GiftCertificateServiceImplTest {
 
-    @Autowired
-    private GiftCertificateDao giftCertificateDao;
-
-    @Autowired
-    private TagDao tagDao;
+    @Mock
+    private GiftCertificateDao giftCertificateDao = Mockito.mock(GiftCertificateDaoImpl.class);
+    @Mock
+    private TagDao tagDao = Mockito.mock(TagDaoImpl.class);
 
     private GiftCertificateService giftCertificateService;
     private GiftCertificateDto sampleDto;

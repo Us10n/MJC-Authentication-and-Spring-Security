@@ -26,10 +26,4 @@ public class TestConfig {
 
         return hikariDataSource;
     }
-
-    @Bean
-    @Profile("test")
-    public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(dataSource());
-    }
 }

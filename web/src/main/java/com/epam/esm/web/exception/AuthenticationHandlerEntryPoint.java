@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -41,6 +42,9 @@ public class AuthenticationHandlerEntryPoint implements AuthenticationEntryPoint
         String message = messageSource.getMessage(UNAUTHORIZED_MESSAGE, null, request.getLocale());
         errorResponse.put(ERROR_MESSAGE, message);
         errorResponse.put(ERROR_CODE, HttpStatus.UNAUTHORIZED.value() + VERSION);
-        response.getWriter().write(errorResponse.toString());
+        response.setContentType("application/json");
+        PrintWriter writer=response.getWriter();
+        writer.print(errorResponse);
+        writer.flush();
     }
 }
