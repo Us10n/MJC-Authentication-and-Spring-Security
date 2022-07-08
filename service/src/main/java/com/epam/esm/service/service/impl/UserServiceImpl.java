@@ -73,7 +73,7 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
 
         if(userDtos.isEmpty()){
-            throw new PageNumberOutOfBoundException();
+            throw new EmptyListRequestedException();
         }
         long totalNumberOfEntities = userDao.countAll();
         PagedModel.PageMetadata metadata = new PagedModel.PageMetadata(limit, page, totalNumberOfEntities);

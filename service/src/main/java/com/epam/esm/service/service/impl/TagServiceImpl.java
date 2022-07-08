@@ -64,7 +64,7 @@ public class TagServiceImpl implements TagService {
                 .collect(Collectors.toList());
 
         if(tagDtos.isEmpty()){
-            throw new PageNumberOutOfBoundException();
+            throw new EmptyListRequestedException();
         }
         long totalNumberOfEntities = tagDao.countAll();
         PagedModel.PageMetadata metadata = new PagedModel.PageMetadata(limit, page, totalNumberOfEntities);
@@ -88,7 +88,7 @@ public class TagServiceImpl implements TagService {
                 .collect(Collectors.toList());
 
         if(tagDtos.isEmpty()){
-            throw new PageNumberOutOfBoundException();
+            throw new EmptyListRequestedException();
         }
         long totalNumberOfEntities = tagDao.countAllWidelyUsedTagsOfUserWithHighestCostOfAllOrders();
         PagedModel.PageMetadata metadata = new PagedModel.PageMetadata(limit, page, totalNumberOfEntities);

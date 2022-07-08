@@ -11,10 +11,8 @@ import com.epam.esm.repository.dao.GiftCertificateDao;
 import com.epam.esm.repository.dao.OrderDao;
 import com.epam.esm.repository.dao.UserDao;
 import com.epam.esm.service.converter.impl.OrderConverter;
-import com.epam.esm.service.exception.ExceptionHolder;
-import com.epam.esm.service.exception.IncorrectParameterException;
+import com.epam.esm.service.exception.*;
 import com.epam.esm.service.exception.NoSuchElementException;
-import com.epam.esm.service.exception.PageNumberOutOfBoundException;
 import com.epam.esm.service.service.OrderService;
 import com.epam.esm.service.util.handler.DateHandler;
 import com.epam.esm.service.util.validator.OrderValidator;
@@ -95,7 +93,7 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
 
         if (orderDtos.isEmpty()) {
-            throw new PageNumberOutOfBoundException();
+            throw new EmptyListRequestedException();
         }
         long totalNumberOfEntities = orderDao.countAll();
         PagedModel.PageMetadata metadata = new PagedModel.PageMetadata(limit, page, totalNumberOfEntities);
@@ -123,7 +121,7 @@ public class OrderServiceImpl implements OrderService {
                 .collect(Collectors.toList());
 
         if (orderDtos.isEmpty()) {
-            throw new PageNumberOutOfBoundException();
+            throw new EmptyListRequestedException();
         }
         long totalNumberOfEntities = foundUser.getOrders().size();
         PagedModel.PageMetadata metadata = new PagedModel.PageMetadata(limit, page, totalNumberOfEntities);

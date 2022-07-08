@@ -1,9 +1,6 @@
 package com.epam.esm.web.exception;
 
-import com.epam.esm.service.exception.DuplicateEntityException;
-import com.epam.esm.service.exception.IncorrectParameterException;
-import com.epam.esm.service.exception.NoSuchElementException;
-import com.epam.esm.service.exception.PageNumberOutOfBoundException;
+import com.epam.esm.service.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -100,10 +97,10 @@ public class ApiExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(PageNumberOutOfBoundException.class)
-    public ResponseEntity<Map<String, String>> handlePageNumberOutOfBoundExceptionException(PageNumberOutOfBoundException ex, Locale locale) {
+    @ExceptionHandler(EmptyListRequestedException.class)
+    public ResponseEntity<Map<String, String>> handleEmptyListRequestedException(EmptyListRequestedException ex, Locale locale) {
         Map<String, String> errorResponse = new HashMap<>();
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse, HttpStatus.OK);
     }
 
     @ExceptionHandler(Exception.class)

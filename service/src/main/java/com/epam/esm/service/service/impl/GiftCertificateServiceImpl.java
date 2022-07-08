@@ -91,7 +91,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 .collect(Collectors.toList());
 
         if(giftCertificateDtos.isEmpty()){
-            throw new PageNumberOutOfBoundException();
+            throw new EmptyListRequestedException();
         }
         long totalNumberOfEntities = giftCertificateDao.countAll();
         PagedModel.PageMetadata metadata = new PagedModel.PageMetadata(limit, page, totalNumberOfEntities);
@@ -123,7 +123,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 .collect(Collectors.toList());
 
         if(certificateDtos.isEmpty()){
-            throw new PageNumberOutOfBoundException();
+            throw new EmptyListRequestedException();
         }
         long totalNumberOfEntities = giftCertificateDao.countAllByCriteria(criteria);
         PagedModel.PageMetadata metadata = new PagedModel.PageMetadata(limit, page, totalNumberOfEntities);

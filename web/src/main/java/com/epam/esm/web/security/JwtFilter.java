@@ -1,7 +1,13 @@
 package com.epam.esm.web.security;
 
+import com.epam.esm.domain.dto.OrderInputDto;
+import com.epam.esm.domain.dto.UserDto;
+import com.epam.esm.service.exception.NoSuchElementException;
 import com.epam.esm.service.service.UserDetailService;
+import com.epam.esm.service.service.UserService;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,11 +28,14 @@ public class JwtFilter extends OncePerRequestFilter {
     private static final String BEARER = "Bearer ";
 
     private UserDetailService userDetailService;
+    private UserService userService;
     private JwtUtil jwtUtil;
 
     @Autowired
-    public JwtFilter(UserDetailService userDetailService, JwtUtil jwtUtil) {
+    public JwtFilter(UserDetailService userDetailService, UserService userService,
+                     JwtUtil jwtUtil) {
         this.userDetailService = userDetailService;
+        this.userService = userService;
         this.jwtUtil = jwtUtil;
     }
 
@@ -40,8 +49,13 @@ public class JwtFilter extends OncePerRequestFilter {
 
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(auth);
+
+            OrderInputDto orderInputDto = new Gson().fromJson(request.getReader(), OrderInputDto.class);
+            if (orderInputDto.getUserId() != null
+                    && !isAuthenticatedUserCreateOrder(orderInputDto.getUserId(), login)) {
+                throw new AccessDeniedException("");
+            }
         }
-//        SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         filterChain.doFilter(request, response);
     }
@@ -51,6 +65,11 @@ public class JwtFilter extends OncePerRequestFilter {
         return hasText(rawToken)
                 ? rawToken
                 : null;
+    }
+
+    private boolean isAuthenticatedUserCreateOrder(Long requestedUserId, String customerEmail) {
+        UserDto customer = userService.readByEmail(customerEmail);
+        return requestedUserId.equals(customer.getUserId());
     }
 
 
