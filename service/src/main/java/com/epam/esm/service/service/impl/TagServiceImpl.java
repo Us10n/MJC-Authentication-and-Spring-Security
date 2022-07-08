@@ -4,10 +4,7 @@ import com.epam.esm.domain.dto.TagDto;
 import com.epam.esm.domain.entity.Tag;
 import com.epam.esm.repository.dao.TagDao;
 import com.epam.esm.service.converter.impl.TagConverter;
-import com.epam.esm.service.exception.DuplicateEntityException;
-import com.epam.esm.service.exception.ExceptionHolder;
-import com.epam.esm.service.exception.IncorrectParameterException;
-import com.epam.esm.service.exception.NoSuchElementException;
+import com.epam.esm.service.exception.*;
 import com.epam.esm.service.service.TagService;
 import com.epam.esm.service.util.validator.TagValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +62,10 @@ public class TagServiceImpl implements TagService {
                 .stream()
                 .map(tagConverter::convertToDto)
                 .collect(Collectors.toList());
+
+        if(tagDtos.isEmpty()){
+            throw new PageNumberOutOfBoundException();
+        }
         long totalNumberOfEntities = tagDao.countAll();
         PagedModel.PageMetadata metadata = new PagedModel.PageMetadata(limit, page, totalNumberOfEntities);
         return PagedModel.of(tagDtos, metadata);
@@ -86,6 +87,9 @@ public class TagServiceImpl implements TagService {
                 .map(tagConverter::convertToDto)
                 .collect(Collectors.toList());
 
+        if(tagDtos.isEmpty()){
+            throw new PageNumberOutOfBoundException();
+        }
         long totalNumberOfEntities = tagDao.countAllWidelyUsedTagsOfUserWithHighestCostOfAllOrders();
         PagedModel.PageMetadata metadata = new PagedModel.PageMetadata(limit, page, totalNumberOfEntities);
         return PagedModel.of(tagDtos, metadata);

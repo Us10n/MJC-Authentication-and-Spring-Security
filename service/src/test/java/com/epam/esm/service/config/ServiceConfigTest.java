@@ -15,7 +15,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @ComponentScan(basePackages = {"com.epam.esm"})
-@PropertySource(value = {"classpath:application.properties"})
 public class ServiceConfigTest {
 
     @Bean

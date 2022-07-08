@@ -10,7 +10,6 @@ import javax.sql.DataSource;
 
 @Configuration
 @ComponentScan(basePackages = {"com.epam.esm"})
-@PropertySource(value = {"classpath:application.properties"})
 public class DaoConfig {
     @Bean
     @Profile("dev")

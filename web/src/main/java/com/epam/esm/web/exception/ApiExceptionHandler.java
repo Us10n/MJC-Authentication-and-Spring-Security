@@ -3,6 +3,7 @@ package com.epam.esm.web.exception;
 import com.epam.esm.service.exception.DuplicateEntityException;
 import com.epam.esm.service.exception.IncorrectParameterException;
 import com.epam.esm.service.exception.NoSuchElementException;
+import com.epam.esm.service.exception.PageNumberOutOfBoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -93,10 +94,15 @@ public class ApiExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<Map<String, String>> handleConstraintViolationException(ConstraintViolationException ex, Locale locale) {
         Map<String, String> errorResponse = new HashMap<>();
-        String message = messageSource.getMessage(JSON_PARSE_ERROR, null, locale);
 
         errorResponse.put(ERROR_MESSAGE, ex.getMessage());
         errorResponse.put(ERROR_CODE, HttpStatus.BAD_REQUEST.value() + VERSION);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(PageNumberOutOfBoundException.class)
+    public ResponseEntity<Map<String, String>> handlePageNumberOutOfBoundExceptionException(PageNumberOutOfBoundException ex, Locale locale) {
+        Map<String, String> errorResponse = new HashMap<>();
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 

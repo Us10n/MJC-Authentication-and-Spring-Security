@@ -8,10 +8,7 @@ import com.epam.esm.repository.dao.GiftCertificateDao;
 import com.epam.esm.repository.dao.TagDao;
 import com.epam.esm.service.converter.impl.GiftCertificateConverter;
 import com.epam.esm.service.converter.impl.TagConverter;
-import com.epam.esm.service.exception.DuplicateEntityException;
-import com.epam.esm.service.exception.ExceptionHolder;
-import com.epam.esm.service.exception.IncorrectParameterException;
-import com.epam.esm.service.exception.NoSuchElementException;
+import com.epam.esm.service.exception.*;
 import com.epam.esm.service.service.GiftCertificateService;
 import com.epam.esm.service.util.handler.DateHandler;
 import com.epam.esm.service.util.validator.GiftCertificateCriteriaValidator;
@@ -92,6 +89,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 .stream()
                 .map(giftCertificateConverter::convertToDto)
                 .collect(Collectors.toList());
+
+        if(giftCertificateDtos.isEmpty()){
+            throw new PageNumberOutOfBoundException();
+        }
         long totalNumberOfEntities = giftCertificateDao.countAll();
         PagedModel.PageMetadata metadata = new PagedModel.PageMetadata(limit, page, totalNumberOfEntities);
         return PagedModel.of(giftCertificateDtos, metadata);
@@ -120,6 +121,10 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         List<GiftCertificateDto> certificateDtos = foundCertificates.stream()
                 .map(giftCertificateConverter::convertToDto)
                 .collect(Collectors.toList());
+
+        if(certificateDtos.isEmpty()){
+            throw new PageNumberOutOfBoundException();
+        }
         long totalNumberOfEntities = giftCertificateDao.countAllByCriteria(criteria);
         PagedModel.PageMetadata metadata = new PagedModel.PageMetadata(limit, page, totalNumberOfEntities);
         return PagedModel.of(certificateDtos, metadata);

@@ -42,6 +42,7 @@ public class AuthenticationController {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 authInfo.getLogin(), authInfo.getPassword()));
 
+
         String token = jwtUtil.generateToken(authInfo.getLogin());
         HashMap<String, String> map = new HashMap<>();
         map.put("token", token);

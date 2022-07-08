@@ -1,8 +1,10 @@
 package com.epam.esm.service.service.impl;
 
 import com.epam.esm.domain.dto.OrderDetailDto;
+import com.epam.esm.domain.dto.OrderDto;
 import com.epam.esm.domain.entity.GiftCertificate;
-import com.epam.esm.domain.dto.Order;
+import com.epam.esm.domain.dto.OrderInputDto;
+import com.epam.esm.domain.entity.Order;
 import com.epam.esm.domain.entity.OrderDetail;
 import com.epam.esm.domain.entity.User;
 import com.epam.esm.repository.dao.GiftCertificateDao;
@@ -12,6 +14,7 @@ import com.epam.esm.service.converter.impl.OrderConverter;
 import com.epam.esm.service.exception.ExceptionHolder;
 import com.epam.esm.service.exception.IncorrectParameterException;
 import com.epam.esm.service.exception.NoSuchElementException;
+import com.epam.esm.service.exception.PageNumberOutOfBoundException;
 import com.epam.esm.service.service.OrderService;
 import com.epam.esm.service.util.handler.DateHandler;
 import com.epam.esm.service.util.validator.OrderValidator;
@@ -19,9 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.epam.esm.service.exception.ExceptionMessageKey.*;
@@ -55,81 +56,77 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderDetailDto create(Order order) {
+    public OrderDto create(OrderInputDto orderInputDto) {
         ExceptionHolder exceptionHolder = new ExceptionHolder();
-        OrderValidator.isOrderValid(order, exceptionHolder);
+        OrderValidator.isOrderInputDtoValid(orderInputDto, exceptionHolder);
         if (!exceptionHolder.getExceptionMessages().isEmpty()) {
             throw new IncorrectParameterException(exceptionHolder);
         }
-        Optional<User> customer = userDao.findById(order.getUserId());
-        if (!customer.isPresent()) {
-            throw new NoSuchElementException(USER_NOT_FOUND);
-        }
-        Optional<GiftCertificate> requestedCertificateOptional = giftCertificateDao.findById(order.getGiftCertificateId());
-        GiftCertificate requestedCertificate = requestedCertificateOptional
-                .orElseThrow(() -> new NoSuchElementException(GIFT_CERTIFICATE_NOT_FOUND));
+        Optional<User> customerOptional = userDao.findById(orderInputDto.getUserId());
+        User customer = customerOptional
+                .orElseThrow(() -> new NoSuchElementException(USER_NOT_FOUND));
 
-        OrderDetail orderDetail = new OrderDetail();
-        orderDetail.setGiftCertificate(requestedCertificate);
-        orderDetail.setUser(customer.get());
-        orderDetail.setPrice(requestedCertificate.getPrice());
-        orderDetail.setPurchaseTime(DateHandler.getCurrentDate());
-        OrderDetail createdOrder = orderDao.create(orderDetail);
+        List<OrderDetail> orderDetails = new ArrayList<>();
+        for (Long giftCertificateId : orderInputDto.getGiftCertificateIds()) {
+            Optional<GiftCertificate> requestedCertificateOptional = giftCertificateDao.findById(giftCertificateId);
+            GiftCertificate requestedCertificate = requestedCertificateOptional
+                    .orElseThrow(() -> new NoSuchElementException(GIFT_CERTIFICATE_NOT_FOUND));
+
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setGiftCertificate(requestedCertificate);
+            orderDetail.setPrice(requestedCertificate.getPrice());
+            orderDetails.add(orderDetail);
+        }
+        Order order = new Order();
+        order.setPurchaseTime(DateHandler.getCurrentDate());
+        order.setUser(customer);
+        order.setOrderDetails(orderDetails);
+        Order createdOrder = orderDao.create(order);
+
 
         return orderConverter.convertToDto(createdOrder);
     }
 
     @Override
-    public List<OrderDetailDto> create(List<Order> orders) {
-        ExceptionHolder exceptionHolder = new ExceptionHolder();
-        orders.forEach(
-                order -> OrderValidator.isOrderValid(order, exceptionHolder)
-        );
-        if (!exceptionHolder.getExceptionMessages().isEmpty()) {
-            throw new IncorrectParameterException(exceptionHolder);
-        }
-
-        List<OrderDetailDto> createdOrders = new ArrayList<>();
-        orders.forEach(order -> {
-            OrderDetailDto createdOrder = create(order);
-            createdOrders.add(createdOrder);
-        });
-
-        return createdOrders;
-    }
-
-    @Override
-    public PagedModel<OrderDetailDto> readAll(Integer page, Integer limit) {
-        List<OrderDetailDto> orderDetailDtos = orderDao.findAll(page, limit)
+    public PagedModel<OrderDto> readAll(Integer page, Integer limit) {
+        List<OrderDto> orderDtos = orderDao.findAll(page, limit)
                 .stream()
                 .map(orderConverter::convertToDto)
                 .collect(Collectors.toList());
+
+        if (orderDtos.isEmpty()) {
+            throw new PageNumberOutOfBoundException();
+        }
         long totalNumberOfEntities = orderDao.countAll();
         PagedModel.PageMetadata metadata = new PagedModel.PageMetadata(limit, page, totalNumberOfEntities);
-        return PagedModel.of(orderDetailDtos, metadata);
+        return PagedModel.of(orderDtos, metadata);
     }
 
     @Override
-    public OrderDetailDto readById(long id) {
-        Optional<OrderDetail> optionalOrder = orderDao.findById(id);
-        OrderDetail orderDetail = optionalOrder
+    public OrderDto readById(long id) {
+        Optional<Order> optionalOrder = orderDao.findById(id);
+        Order order = optionalOrder
                 .orElseThrow(() -> new NoSuchElementException(ORDER_NOT_FOUND));
 
-        return orderConverter.convertToDto(orderDetail);
+        return orderConverter.convertToDto(order);
     }
 
     @Override
-    public PagedModel<OrderDetailDto> readOrdersByUserId(long id, Integer page, Integer limit) {
+    public PagedModel<OrderDto> readOrdersByUserId(long id, Integer page, Integer limit) {
         Optional<User> optionalUser = userDao.findById(id);
         User foundUser = optionalUser
                 .orElseThrow(() -> new NoSuchElementException(USER_NOT_FOUND));
 
-        List<OrderDetailDto> orderDetailDtos = orderDao.findOrdersByUserId(id, page, limit)
+        List<OrderDto> orderDtos = orderDao.findOrdersByUserId(id, page, limit)
                 .stream()
                 .map(orderConverter::convertToDto)
                 .collect(Collectors.toList());
+
+        if (orderDtos.isEmpty()) {
+            throw new PageNumberOutOfBoundException();
+        }
         long totalNumberOfEntities = foundUser.getOrders().size();
         PagedModel.PageMetadata metadata = new PagedModel.PageMetadata(limit, page, totalNumberOfEntities);
-        return PagedModel.of(orderDetailDtos, metadata);
+        return PagedModel.of(orderDtos, metadata);
     }
 }

@@ -1,6 +1,7 @@
 package com.epam.esm.repository.dao;
 
 import com.epam.esm.domain.entity.Tag;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;

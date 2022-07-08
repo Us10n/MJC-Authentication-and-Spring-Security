@@ -25,32 +25,36 @@ public class TagDaoImpl implements TagDao {
     private static final String FIND_ALL_QUERY = "SELECT tags.id, tags.name FROM tags";
     private static final String FIND_BY_NAME_QUERY = FIND_ALL_QUERY + " WHERE name=:tagName";
     private static final String DETACH_TAG_BY_ID_QUERY = "DELETE FROM gift_certificate_tags WHERE tag_id=:tagId";
-    private static final String FIND_WIDELY_USED_TAG_OF_USER_WITH_HIGHEST_COST_OF_ALL_ORDERS = "SELECT tags.id, tags.name, count(tags.name) FROM tags " +
-            "JOIN gift_certificate_tags gfts on gfts.tag_id= tags.id " +
-            "JOIN gift_certificates gfs on gfs.id=gfts.gift_certificate_id " +
-            "JOIN orders ords on ords.gift_certificate_id=gfs.id " +
-            "JOIN users usrs on ords.user_id=usrs.id " +
+    private static final String FIND_WIDELY_USED_TAG_OF_USER_WITH_HIGHEST_COST_OF_ALL_ORDERS = "SELECT tags.id, tags.name FROM tags " +
+            "JOIN  gift_certificate_tags gfts on gfts.tag_id= tags.id " +
+            "JOIN  gift_certificates gfs on gfs.id=gfts.gift_certificate_id " +
+            "JOIN  order_details ordds on ordds.gift_certificate_id=gfs.id " +
+            "JOIN  orders ords on ords.id=ordds.order_id " +
+            "JOIN  users usrs on ords.user_id=usrs.id " +
             "WHERE usrs.id=( " +
-            "    SELECT users.id FROM users  " +
-            "    JOIN orders ON orders.user_id=users.id  " +
+            "    SELECT users.id FROM  users  " +
+            "    JOIN  orders ON orders.user_id=users.id  " +
+            "    JOIN  order_details ON orders.id=order_details.order_id " +
             "    GROUP BY users.id  " +
-            "    ORDER BY sum(orders.price) DESC LIMIT 1 " +
+            "    ORDER BY sum(order_details.price) DESC LIMIT 1 " +
             ") " +
             "GROUP BY tags.name " +
             "HAVING count(tags.name)=( " +
-            "    SELECT count(tags.name) FROM tags " +
-            "    JOIN gift_certificate_tags gfts on gfts.tag_id= tags.id " +
-            "    JOIN gift_certificates gfs on gfs.id=gfts.gift_certificate_id " +
-            "    JOIN orders ords on ords.gift_certificate_id=gfs.id " +
-            "    JOIN users usrs on ords.user_id=usrs.id " +
+            "    SELECT count(tags.name) FROM  tags " +
+            "    JOIN  gift_certificate_tags gfts on gfts.tag_id= tags.id " +
+            "    JOIN  gift_certificates gfs on gfs.id=gfts.gift_certificate_id " +
+            "    JOIN  order_details ordds on ordds.gift_certificate_id=gfs.id " +
+            "    JOIN  orders ords on ords.id=ordds.order_id " +
+            "    JOIN  users usrs on ords.user_id=usrs.id " +
             "    WHERE usrs.id=( " +
-            "        SELECT users.id FROM users  " +
-            "        JOIN orders ON orders.user_id=users.id  " +
+            "        SELECT users.id FROM  users  " +
+            "        JOIN  orders ON orders.user_id=users.id  " +
+            "        JOIN  order_details ON orders.id=order_details.order_id " +
             "        GROUP BY users.id  " +
-            "        ORDER BY sum(orders.price) DESC LIMIT 1 " +
+            "        ORDER BY sum(order_details.price) DESC LIMIT 1 " +
             "    ) " +
             "    GROUP BY tags.name " +
-            "    ORDER BY count(tags.name) DESC limit 1 " +
+            "    ORDER BY count(tags.name) DESC LIMIT 1 " +
             ") " +
             "ORDER BY count(tags.name) DESC";
     private static final String COUNT_ENTITIES_QUERY = "SELECT count(t) FROM Tag t";
@@ -75,6 +79,7 @@ public class TagDaoImpl implements TagDao {
 
     @Override
     public Optional<Tag> findByName(String name) {
+
         return entityManager.createNativeQuery(FIND_BY_NAME_QUERY, Tag.class)
                 .setParameter("tagName", name)
                 .getResultStream()

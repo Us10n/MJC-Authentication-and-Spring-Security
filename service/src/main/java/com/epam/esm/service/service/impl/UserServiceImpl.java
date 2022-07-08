@@ -5,10 +5,7 @@ import com.epam.esm.domain.dto.UserRole;
 import com.epam.esm.domain.entity.User;
 import com.epam.esm.repository.dao.UserDao;
 import com.epam.esm.service.converter.impl.UserConverter;
-import com.epam.esm.service.exception.DuplicateEntityException;
-import com.epam.esm.service.exception.ExceptionHolder;
-import com.epam.esm.service.exception.IncorrectParameterException;
-import com.epam.esm.service.exception.NoSuchElementException;
+import com.epam.esm.service.exception.*;
 import com.epam.esm.service.service.UserService;
 import com.epam.esm.service.util.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,6 +71,10 @@ public class UserServiceImpl implements UserService {
                 .stream()
                 .map(userConverter::convertToDto)
                 .collect(Collectors.toList());
+
+        if(userDtos.isEmpty()){
+            throw new PageNumberOutOfBoundException();
+        }
         long totalNumberOfEntities = userDao.countAll();
         PagedModel.PageMetadata metadata = new PagedModel.PageMetadata(limit, page, totalNumberOfEntities);
 

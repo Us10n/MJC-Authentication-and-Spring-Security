@@ -1,6 +1,5 @@
 package com.epam.esm.web.security;
 
-import com.epam.esm.service.converter.impl.UserConverter;
 import com.epam.esm.service.service.UserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,13 +22,10 @@ public class JwtFilter extends OncePerRequestFilter {
     private static final String BEARER = "Bearer ";
 
     private UserDetailService userDetailService;
-    private UserConverter userConverter;
     private JwtUtil jwtUtil;
 
     @Autowired
-    public JwtFilter(UserDetailService userDetailService, UserConverter userConverter,
-                     JwtUtil jwtUtil) {
-        this.userConverter = userConverter;
+    public JwtFilter(UserDetailService userDetailService, JwtUtil jwtUtil) {
         this.userDetailService = userDetailService;
         this.jwtUtil = jwtUtil;
     }
@@ -40,12 +36,12 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (token != null && jwtUtil.isTokenValid(token)) {
             String login = jwtUtil.getLoginFromToken(token);
-
             UserDetails userDetails = userDetailService.readByEmail(login);
 
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
+//        SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         filterChain.doFilter(request, response);
     }

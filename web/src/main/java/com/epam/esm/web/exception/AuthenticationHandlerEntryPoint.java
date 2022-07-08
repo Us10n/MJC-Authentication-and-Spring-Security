@@ -1,5 +1,6 @@
 package com.epam.esm.web.exception;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
@@ -42,9 +43,9 @@ public class AuthenticationHandlerEntryPoint implements AuthenticationEntryPoint
         String message = messageSource.getMessage(UNAUTHORIZED_MESSAGE, null, request.getLocale());
         errorResponse.put(ERROR_MESSAGE, message);
         errorResponse.put(ERROR_CODE, HttpStatus.UNAUTHORIZED.value() + VERSION);
-        response.setContentType("application/json");
-        PrintWriter writer=response.getWriter();
-        writer.print(errorResponse);
-        writer.flush();
+
+        response.getWriter().write(String.valueOf(
+                new ObjectMapper().writeValueAsString(errorResponse)
+        ));
     }
 }

@@ -7,16 +7,15 @@ import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
-/**
- * Data transfer object for OrderDetail
- */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Relation(collectionRelation = "orderDetails")
-public class OrderDetailDto  extends RepresentationModel<OrderDetailDto> {
-    private long orderDetailId;
-    private long giftCertificateId;
-    private Double price;
+@Relation(collectionRelation = "orders")
+public class OrderDto extends RepresentationModel<OrderDto> {
+    private long orderId;
+    private long userId;
+    private LocalDateTime purchaseTime;
+    private List<OrderDetailDto> orderDetailDtos;
 }

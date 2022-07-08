@@ -1,9 +1,11 @@
 package com.epam.esm.service.util.validator;
 
-import com.epam.esm.domain.dto.TagDto;
-import com.epam.esm.domain.dto.Order;
+import com.epam.esm.domain.dto.OrderInputDto;
 import com.epam.esm.service.exception.ExceptionHolder;
 import lombok.experimental.UtilityClass;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 import static com.epam.esm.service.exception.ExceptionMessageKey.*;
 
@@ -18,8 +20,8 @@ public class OrderValidator {
      * @param userId the user id
      * @return the boolean
      */
-    public boolean isUserIdValid(long userId) {
-        return userId > 0;
+    public boolean isUserIdValid(Long userId) {
+        return userId != null && userId > 0;
     }
 
     /**
@@ -28,8 +30,12 @@ public class OrderValidator {
      * @param certId the cert id
      * @return the boolean
      */
-    public boolean isGiftCertificateIdValid(long certId) {
-        return certId > 0;
+    public boolean isGiftCertificateIdValid(Long certId) {
+        return certId != null && certId > 0;
+    }
+
+    private void validateGiftCertificateIds(List<Long> certIds, ExceptionHolder holder) {
+
     }
 
     /**
@@ -38,16 +44,23 @@ public class OrderValidator {
      * @param order  the order
      * @param holder the holder
      */
-    public void isOrderValid(Order order, ExceptionHolder holder){
+    public void isOrderInputDtoValid(OrderInputDto order, ExceptionHolder holder) {
         if (order == null) {
-            holder.addException(NULL_PASSED, TagDto.class);
+            holder.addException(NULL_PASSED, OrderInputDto.class);
+            return;
+        }
+        if (CollectionUtils.isEmpty(order.getGiftCertificateIds())) {
+            holder.addException(NO_GIFT_CERTIFICATE_ID_VALUES);
             return;
         }
         if (!isUserIdValid(order.getUserId())) {
             holder.addException(BAD_ORDER_USER_ID, order.getUserId());
         }
-        if (!isGiftCertificateIdValid(order.getGiftCertificateId())) {
-            holder.addException(BAD_ORDER_GIFT_CERTIFICATE_ID, order.getGiftCertificateId());
-        }
+
+        order.getGiftCertificateIds().forEach(giftCertificateId -> {
+            if (!isGiftCertificateIdValid(giftCertificateId)) {
+                holder.addException(BAD_ORDER_GIFT_CERTIFICATE_ID, giftCertificateId);
+            }
+        });
     }
 }

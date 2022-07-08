@@ -1,5 +1,6 @@
 package com.epam.esm.repository.dao.impl;
 
+import com.epam.esm.domain.entity.Order;
 import com.epam.esm.domain.entity.OrderDetail;
 import com.epam.esm.repository.dao.OrderDao;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OrderDaoImpl implements OrderDao {
 
-    private static final String FIND_ORDERS_BY_USER_ID="SELECT o FROM OrderDetail o WHERE o.user.id = :userId";
+    private static final String FIND_ORDERS_BY_USER_ID = "SELECT o FROM Order o WHERE o.user.id = :userId";
     private static final String COUNT_ENTITIES_QUERY = "SELECT count(o) FROM OrderDetail o";
     private static final String ID = "id";
 
@@ -30,24 +31,24 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     @Transactional
-    public OrderDetail create(OrderDetail object) {
+    public Order create(Order object) {
         entityManager.persist(object);
         return object;
     }
 
     @Override
-    public Optional<OrderDetail> findById(long id) {
-        return Optional.ofNullable(entityManager.find(OrderDetail.class, id));
+    public Optional<Order> findById(long id) {
+        return Optional.ofNullable(entityManager.find(Order.class, id));
     }
 
     @Override
-    public List<OrderDetail> findAll(int page, int limit) {
+    public List<Order> findAll(int page, int limit) {
         int offset = (page - 1) * limit;
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<OrderDetail> query = criteriaBuilder.createQuery(OrderDetail.class).where();
-        Root<OrderDetail> from = query.from(OrderDetail.class);
-        CriteriaQuery<OrderDetail> criteriaQuery = query.select(from);
+        CriteriaQuery<Order> query = criteriaBuilder.createQuery(Order.class).where();
+        Root<Order> from = query.from(Order.class);
+        CriteriaQuery<Order> criteriaQuery = query.select(from);
         criteriaQuery.orderBy(criteriaBuilder.asc(from.get(ID)));
 
         return entityManager.createQuery(criteriaQuery)
@@ -62,11 +63,11 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
-    public List<OrderDetail> findOrdersByUserId(long id, Integer page, Integer limit) {
+    public List<Order> findOrdersByUserId(long id, Integer page, Integer limit) {
         int offset = (page - 1) * limit;
 
-        return entityManager.createQuery(FIND_ORDERS_BY_USER_ID,OrderDetail.class)
-                .setParameter("userId",id)
+        return entityManager.createQuery(FIND_ORDERS_BY_USER_ID, Order.class)
+                .setParameter("userId", id)
                 .setFirstResult(offset)
                 .setMaxResults(limit)
                 .getResultList();

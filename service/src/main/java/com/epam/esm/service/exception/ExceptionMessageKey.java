@@ -34,6 +34,8 @@ public final class ExceptionMessageKey {
     public static final String USER_NOT_FOUND = "user.notFound";
 
     public static final String BAD_ORDER_USER_ID = "order.badUserId";
+    public static final String NO_USER_ID_VALUE = "order.noUserId";
+    public static final String NO_GIFT_CERTIFICATE_ID_VALUES = "order.noCertificateIds";
     public static final String BAD_ORDER_GIFT_CERTIFICATE_ID = "order.badCertificateId";
     public static final String ORDER_NOT_FOUND = "order.notFound";
 

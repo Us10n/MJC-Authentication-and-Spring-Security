@@ -1,20 +1,11 @@
 package com.epam.esm.service.converter.impl;
 
-import com.epam.esm.domain.dto.OrderDetailDto;
 import com.epam.esm.domain.dto.UserDto;
 import com.epam.esm.domain.dto.UserRole;
-import com.epam.esm.domain.entity.OrderDetail;
 import com.epam.esm.domain.entity.User;
 import com.epam.esm.service.converter.DtoEntityConverter;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * The type User converter.
@@ -45,13 +36,7 @@ public class UserConverter implements DtoEntityConverter<UserDto, User> {
         userDto.setPassword(object.getPassword());
         userDto.setName(object.getName());
         userDto.setRole(UserRole.valueOf(object.getRole()));
-        //todo should I remove orders from user dto?
-//        List<OrderDetailDto> orders = object.getOrders() == null
-//                ? new ArrayList<>()
-//                : object.getOrders().stream()
-//                .map(orderConverter::convertToDto)
-//                .collect(Collectors.toList());
-//        userDto.setOrders(orders);
+
         return userDto;
     }
 
@@ -63,13 +48,7 @@ public class UserConverter implements DtoEntityConverter<UserDto, User> {
         user.setPassword(object.getPassword());
         user.setName(object.getName());
         user.setRole(object.getRole().toString());
-        //todo should I remove orders from user dto?
-//        List<OrderDetail> orders = object.getOrders() == null
-//                ? new ArrayList<>()
-//                : object.getOrders().stream()
-//                .map(orderConverter::convertToEntity)
-//                .collect(Collectors.toList());
-//        user.setOrders(orders);
+
         return user;
     }
 }

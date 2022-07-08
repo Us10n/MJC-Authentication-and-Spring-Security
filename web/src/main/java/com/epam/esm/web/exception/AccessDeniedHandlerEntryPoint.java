@@ -1,11 +1,13 @@
 package com.epam.esm.web.exception;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MimeType;
 import org.springframework.util.MimeTypeUtils;
 
 import javax.servlet.ServletException;
@@ -42,9 +44,9 @@ public class AccessDeniedHandlerEntryPoint implements AccessDeniedHandler {
         String message = messageSource.getMessage(FORBIDDEN_MESSAGE, null, request.getLocale());
         errorResponse.put(ERROR_MESSAGE, message);
         errorResponse.put(ERROR_CODE, HttpStatus.FORBIDDEN.value() + VERSION);
-        response.setContentType("application/json");
-        PrintWriter writer=response.getWriter();
-        writer.print(errorResponse);
-        writer.flush();
+
+        response.getWriter().write(String.valueOf(
+                new ObjectMapper().writeValueAsString(errorResponse)
+        ));
     }
 }

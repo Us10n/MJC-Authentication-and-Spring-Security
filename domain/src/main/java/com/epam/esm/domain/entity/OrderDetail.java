@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  * The type Order detail.
@@ -15,7 +14,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "orders")
+@Table(name = "order_details")
 @Audited
 public class OrderDetail {
     @Id
@@ -24,13 +23,6 @@ public class OrderDetail {
 
     @Column(name = "price")
     private Double price;
-
-    @Column(name = "purchase_time")
-    private LocalDateTime purchaseTime;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "gift_certificate_id")

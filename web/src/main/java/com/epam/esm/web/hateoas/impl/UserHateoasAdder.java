@@ -1,7 +1,6 @@
 package com.epam.esm.web.hateoas.impl;
 
 import com.epam.esm.domain.dto.UserDto;
-import com.epam.esm.service.converter.impl.OrderConverter;
 import com.epam.esm.web.controller.OrderController;
 import com.epam.esm.web.controller.UserController;
 import com.epam.esm.web.hateoas.HateoasAdder;

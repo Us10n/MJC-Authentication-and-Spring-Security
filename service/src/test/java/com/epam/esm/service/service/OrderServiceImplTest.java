@@ -2,7 +2,7 @@ package com.epam.esm.service.service;
 
 import com.epam.esm.domain.dto.OrderDetailDto;
 import com.epam.esm.domain.entity.GiftCertificate;
-import com.epam.esm.domain.dto.Order;
+import com.epam.esm.domain.dto.OrderInputDto;
 import com.epam.esm.domain.entity.OrderDetail;
 import com.epam.esm.domain.entity.User;
 import com.epam.esm.repository.dao.GiftCertificateDao;
@@ -11,21 +11,15 @@ import com.epam.esm.repository.dao.UserDao;
 import com.epam.esm.repository.dao.impl.GiftCertificateDaoImpl;
 import com.epam.esm.repository.dao.impl.OrderDaoImpl;
 import com.epam.esm.repository.dao.impl.UserDaoImpl;
-import com.epam.esm.service.config.ServiceConfigTest;
 import com.epam.esm.service.converter.impl.OrderConverter;
 import com.epam.esm.service.service.impl.OrderServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -73,7 +67,7 @@ class OrderServiceImplTest {
 
     @Test
     void create() {
-        Order order = new Order(1, 1);
+        OrderInputDto order = new OrderInputDto(1, 1);
         OrderDetailDto actual = orderService.create(order);
         OrderDetailDto expected = new OrderDetailDto(1, 1.1, sampleDate, 1, 1);
 
