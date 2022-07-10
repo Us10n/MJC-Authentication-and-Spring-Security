@@ -4,18 +4,15 @@ import com.epam.esm.domain.dto.UserDto;
 import com.epam.esm.domain.dto.UserRole;
 import com.epam.esm.domain.entity.User;
 import com.epam.esm.repository.dao.UserDao;
-import com.epam.esm.service.converter.impl.UserConverter;
 import com.epam.esm.service.exception.*;
+import com.epam.esm.service.mapper.UserMapper;
 import com.epam.esm.service.service.UserService;
 import com.epam.esm.service.util.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.PagedModel;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -28,19 +25,16 @@ import static com.epam.esm.service.exception.ExceptionMessageKey.*;
 @Service
 public class UserServiceImpl implements UserService {
 
-    private final UserConverter userConverter;
     private final UserDao userDao;
     private final BCryptPasswordEncoder bCryptPasswordEncode;
 
     /**
      * Instantiates a new User service.
      *
-     * @param converter the converter
-     * @param userDao   the user dao
+     * @param userDao the user dao
      */
     @Autowired
-    public UserServiceImpl(UserConverter converter, UserDao userDao, BCryptPasswordEncoder passwordEncoder) {
-        this.userConverter = converter;
+    public UserServiceImpl(UserDao userDao, BCryptPasswordEncoder passwordEncoder) {
         this.userDao = userDao;
         this.bCryptPasswordEncode = passwordEncoder;
     }
@@ -59,20 +53,20 @@ public class UserServiceImpl implements UserService {
         String encryptedPassword = bCryptPasswordEncode.encode(object.getPassword());
         object.setPassword(encryptedPassword);
         object.setRole(UserRole.USER);
-        User userModel = userConverter.convertToEntity(object);
+        User userModel = UserMapper.INSTANCE.mapToEntity(object);
         User createdUser = userDao.create(userModel);
 
-        return userConverter.convertToDto(createdUser);
+        return UserMapper.INSTANCE.mapToDto(createdUser);
     }
 
     @Override
     public PagedModel<UserDto> readAll(Integer page, Integer limit) {
         List<UserDto> userDtos = userDao.findAll(page, limit)
                 .stream()
-                .map(userConverter::convertToDto)
+                .map(UserMapper.INSTANCE::mapToDto)
                 .collect(Collectors.toList());
 
-        if(userDtos.isEmpty()){
+        if (userDtos.isEmpty()) {
             throw new EmptyListRequestedException();
         }
         long totalNumberOfEntities = userDao.countAll();
@@ -87,7 +81,7 @@ public class UserServiceImpl implements UserService {
         User foundUser = optionalUser
                 .orElseThrow(() -> new NoSuchElementException(USER_NOT_FOUND));
 
-        return userConverter.convertToDto(foundUser);
+        return UserMapper.INSTANCE.mapToDto(foundUser);
     }
 
     @Override
@@ -103,6 +97,6 @@ public class UserServiceImpl implements UserService {
         User foundUser = optionalUser
                 .orElseThrow(() -> new NoSuchElementException(USER_NOT_FOUND));
 
-        return userConverter.convertToDto(foundUser);
+        return UserMapper.INSTANCE.mapToDto(foundUser);
     }
 }

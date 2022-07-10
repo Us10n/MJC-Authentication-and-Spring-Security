@@ -6,8 +6,6 @@ import com.epam.esm.domain.entity.GiftCertificate;
 import com.epam.esm.domain.entity.Order;
 import com.epam.esm.domain.entity.OrderDetail;
 import com.epam.esm.domain.entity.User;
-import com.epam.esm.service.converter.impl.OrderConverter;
-import com.epam.esm.service.converter.impl.OrderDetailConverter;
 import com.epam.esm.service.mapper.OrderMapper;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
@@ -28,7 +26,6 @@ class OrderConverterTest {
     private Order order1;
     private Order order2;
     private OrderDto orderDto;
-    private OrderConverter orderConverter = new OrderConverter(new OrderDetailConverter());
 
     @BeforeAll
     public void setup() {
@@ -42,31 +39,15 @@ class OrderConverterTest {
     }
 
     @Test
-    void convertToDto() {
-        OrderDto actual = orderConverter.convertToDto(order1);
-        OrderDto expected = orderDto;
-
-        Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
-    void test(){
+    void convertToDto(){
         OrderDto actual = OrderMapper.INSTANCE.mapToDto(order1);
         OrderDto expected = orderDto;
 
         Assertions.assertEquals(expected, actual);
     }
     @Test
-    void test2(){
+    void convertToEntity(){
         Order actual = OrderMapper.INSTANCE.mapToEntity(orderDto);
-        Order expected = order2;
-
-        Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
-    void convertToEntity() {
-        Order actual = orderConverter.convertToEntity(orderDto);
         Order expected = order2;
 
         Assertions.assertEquals(expected, actual);

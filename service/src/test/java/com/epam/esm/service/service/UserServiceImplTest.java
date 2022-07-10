@@ -5,9 +5,6 @@ import com.epam.esm.domain.dto.UserRole;
 import com.epam.esm.domain.entity.User;
 import com.epam.esm.repository.dao.UserDao;
 import com.epam.esm.repository.dao.impl.UserDaoImpl;
-import com.epam.esm.service.converter.impl.OrderConverter;
-import com.epam.esm.service.converter.impl.OrderDetailConverter;
-import com.epam.esm.service.converter.impl.UserConverter;
 import com.epam.esm.service.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,9 +37,7 @@ class UserServiceImplTest {
         Mockito.when(userDao.findById(1)).thenReturn(Optional.of(userList.get(0)));
         Mockito.when(userDao.findAll(1, 10)).thenReturn(userList);
 
-        OrderConverter orderConverter = new OrderConverter(new OrderDetailConverter());
-        UserConverter userConverter = new UserConverter(orderConverter);
-        userService = new UserServiceImpl(userConverter, userDao, new BCryptPasswordEncoder());
+        userService = new UserServiceImpl(userDao, new BCryptPasswordEncoder());
     }
 
     @Test

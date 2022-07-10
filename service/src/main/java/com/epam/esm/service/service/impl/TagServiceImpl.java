@@ -3,8 +3,8 @@ package com.epam.esm.service.service.impl;
 import com.epam.esm.domain.dto.TagDto;
 import com.epam.esm.domain.entity.Tag;
 import com.epam.esm.repository.dao.TagDao;
-import com.epam.esm.service.converter.impl.TagConverter;
 import com.epam.esm.service.exception.*;
+import com.epam.esm.service.mapper.TagMapper;
 import com.epam.esm.service.service.TagService;
 import com.epam.esm.service.util.validator.TagValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,18 +25,15 @@ import static com.epam.esm.service.exception.ExceptionMessageKey.TAG_NOT_FOUND;
 public class TagServiceImpl implements TagService {
 
     private final TagDao tagDao;
-    private final TagConverter tagConverter;
 
     /**
      * Instantiates a new Tag service.
      *
      * @param tagDao       the tag dao
-     * @param tagConverter the tag converter
      */
     @Autowired
-    public TagServiceImpl(TagDao tagDao, TagConverter tagConverter) {
+    public TagServiceImpl(TagDao tagDao) {
         this.tagDao = tagDao;
-        this.tagConverter = tagConverter;
     }
 
     @Override
@@ -50,17 +47,17 @@ public class TagServiceImpl implements TagService {
             throw new DuplicateEntityException(TAG_EXIST);
         }
 
-        Tag tagModel = tagConverter.convertToEntity(object);
+        Tag tagModel = TagMapper.INSTANCE.mapToEntity(object);
         Tag createdTag = tagDao.create(tagModel);
 
-        return tagConverter.convertToDto(createdTag);
+        return TagMapper.INSTANCE.mapToDto(createdTag);
     }
 
     @Override
     public PagedModel<TagDto> readAll(Integer page, Integer limit) {
         List<TagDto> tagDtos = tagDao.findAll(page, limit)
                 .stream()
-                .map(tagConverter::convertToDto)
+                .map(TagMapper.INSTANCE::mapToDto)
                 .collect(Collectors.toList());
 
         if(tagDtos.isEmpty()){
@@ -77,14 +74,14 @@ public class TagServiceImpl implements TagService {
         Tag foundTag = optionalTag
                 .orElseThrow(() -> new NoSuchElementException(TAG_NOT_FOUND));
 
-        return tagConverter.convertToDto(foundTag);
+        return TagMapper.INSTANCE.mapToDto(foundTag);
     }
 
     @Override
     public PagedModel<TagDto> findWidelyUsedTagOfUserWithHighestCostOfAllOrders(Integer page, Integer limit) {
         List<Tag> tags = tagDao.findWidelyUsedTagsOfUserWithHighestCostOfAllOrders(page, limit);
         List<TagDto> tagDtos = tags.stream()
-                .map(tagConverter::convertToDto)
+                .map(TagMapper.INSTANCE::mapToDto)
                 .collect(Collectors.toList());
 
         if(tagDtos.isEmpty()){

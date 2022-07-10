@@ -13,8 +13,6 @@ import com.epam.esm.repository.dao.UserDao;
 import com.epam.esm.repository.dao.impl.GiftCertificateDaoImpl;
 import com.epam.esm.repository.dao.impl.OrderDaoImpl;
 import com.epam.esm.repository.dao.impl.UserDaoImpl;
-import com.epam.esm.service.converter.impl.OrderConverter;
-import com.epam.esm.service.converter.impl.OrderDetailConverter;
 import com.epam.esm.service.service.impl.OrderServiceImpl;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
@@ -66,7 +64,7 @@ class OrderServiceImplTest {
         Mockito.when(giftCertificateDao.countAll()).thenReturn(1L);
         Mockito.when(orderDao.findOrdersByUserId(1, 1, 10)).thenReturn(orders);
 
-        orderService = new OrderServiceImpl(orderDao, new OrderConverter(new OrderDetailConverter()), userDao, giftCertificateDao);
+        orderService = new OrderServiceImpl(orderDao, userDao, giftCertificateDao);
     }
 
     @Test

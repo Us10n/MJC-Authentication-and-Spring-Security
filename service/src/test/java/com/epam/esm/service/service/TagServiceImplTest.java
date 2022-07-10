@@ -4,23 +4,16 @@ import com.epam.esm.domain.dto.TagDto;
 import com.epam.esm.domain.entity.Tag;
 import com.epam.esm.repository.dao.TagDao;
 import com.epam.esm.repository.dao.impl.TagDaoImpl;
-import com.epam.esm.service.config.ServiceConfigTest;
-import com.epam.esm.service.converter.impl.TagConverter;
 import com.epam.esm.service.exception.DuplicateEntityException;
 import com.epam.esm.service.service.impl.TagServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,8 +54,7 @@ class TagServiceImplTest {
         Mockito.when(tagDao.create(tags.get(0))).thenReturn(tags.get(0));
         Mockito.when(tagDao.countAll()).thenReturn(8L);
 
-        TagConverter tagConverter = new TagConverter();
-        tagService = new TagServiceImpl(tagDao, tagConverter);
+        tagService = new TagServiceImpl(tagDao);
     }
 
 

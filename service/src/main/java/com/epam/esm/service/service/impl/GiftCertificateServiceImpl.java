@@ -6,10 +6,9 @@ import com.epam.esm.domain.entity.GiftCertificate;
 import com.epam.esm.domain.entity.Tag;
 import com.epam.esm.repository.dao.GiftCertificateDao;
 import com.epam.esm.repository.dao.TagDao;
-import com.epam.esm.service.converter.impl.GiftCertificateConverter;
-import com.epam.esm.service.converter.impl.TagConverter;
 import com.epam.esm.service.exception.*;
-import com.epam.esm.service.exception.NoSuchElementException;
+import com.epam.esm.service.mapper.GiftCertificateMapper;
+import com.epam.esm.service.mapper.TagMapper;
 import com.epam.esm.service.service.GiftCertificateService;
 import com.epam.esm.service.util.handler.DateHandler;
 import com.epam.esm.service.util.validator.GiftCertificateCriteriaValidator;
@@ -19,7 +18,10 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.epam.esm.service.exception.ExceptionMessageKey.GIFT_CERTIFICATE_EXIST;
@@ -35,24 +37,17 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     private final GiftCertificateDao giftCertificateDao;
     private final TagDao tagDao;
-    private final GiftCertificateConverter giftCertificateConverter;
-    private final TagConverter tagConverter;
 
     /**
      * Instantiates a new Gift certificate service.
      *
      * @param giftCertificateDao       the gift certificate dao
      * @param tagDao                   the tag dao
-     * @param giftCertificateConverter the gift certificate converter
-     * @param tagConverter             the tag converter
      */
     @Autowired
-    public GiftCertificateServiceImpl(GiftCertificateDao giftCertificateDao, TagDao tagDao,
-                                      GiftCertificateConverter giftCertificateConverter, TagConverter tagConverter) {
+    public GiftCertificateServiceImpl(GiftCertificateDao giftCertificateDao, TagDao tagDao) {
         this.giftCertificateDao = giftCertificateDao;
         this.tagDao = tagDao;
-        this.giftCertificateConverter = giftCertificateConverter;
-        this.tagConverter = tagConverter;
     }
 
     @Override
@@ -71,21 +66,21 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             throw new DuplicateEntityException(GIFT_CERTIFICATE_EXIST);
         }
 
-        GiftCertificate certificateModel = giftCertificateConverter.convertToEntity(object);
+        GiftCertificate certificateModel = GiftCertificateMapper.INSTANCE.mapToEntity(object);
 
         List<Tag> newTags = new ArrayList<>(certificateModel.getTags());
         List<Tag> tagsToPersist = createTagListToPersist(newTags);
         certificateModel.setTags(new LinkedHashSet<>(tagsToPersist));
         GiftCertificate createdCertificate = giftCertificateDao.create(certificateModel);
 
-        return giftCertificateConverter.convertToDto(createdCertificate);
+        return GiftCertificateMapper.INSTANCE.mapToDto(createdCertificate);
     }
 
     @Override
     public PagedModel<GiftCertificateDto> readAll(Integer page, Integer limit) {
         List<GiftCertificateDto> giftCertificateDtos = giftCertificateDao.findAll(page, limit)
                 .stream()
-                .map(giftCertificateConverter::convertToDto)
+                .map(GiftCertificateMapper.INSTANCE::mapToDto)
                 .collect(Collectors.toList());
 
         if(giftCertificateDtos.isEmpty()){
@@ -103,7 +98,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             throw new NoSuchElementException(GIFT_CERTIFICATE_NOT_FOUND);
         }
 
-        return giftCertificateConverter.convertToDto(optionalGitCertificate.get());
+        return GiftCertificateMapper.INSTANCE.mapToDto(optionalGitCertificate.get());
     }
 
     @Override
@@ -117,7 +112,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
         List<GiftCertificate> foundCertificates = giftCertificateDao.findByCriteria(criteria, page, limit);
         List<GiftCertificateDto> certificateDtos = foundCertificates.stream()
-                .map(giftCertificateConverter::convertToDto)
+                .map(GiftCertificateMapper.INSTANCE::mapToDto)
                 .collect(Collectors.toList());
 
         if(certificateDtos.isEmpty()){
@@ -147,15 +142,15 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
             throw new IncorrectParameterException(exceptionHolder);
         }
 
-        GiftCertificate certificateModel = giftCertificateConverter.convertToEntity(object);
+        GiftCertificate certificateModel = GiftCertificateMapper.INSTANCE.mapToEntity(object);
         List<Tag> newTags = object.getTags().stream()
-                .map(tagConverter::convertToEntity)
+                .map(TagMapper.INSTANCE::mapToEntity)
                 .collect(Collectors.toList());
         List<Tag> tagsToPersist = createTagListToPersist(newTags);
         certificateModel.setTags(new LinkedHashSet<>(tagsToPersist));
         GiftCertificate updatedCertificate = giftCertificateDao.update(certificateModel);
 
-        return giftCertificateConverter.convertToDto(updatedCertificate);
+        return GiftCertificateMapper.INSTANCE.mapToDto(updatedCertificate);
     }
 
     @Override

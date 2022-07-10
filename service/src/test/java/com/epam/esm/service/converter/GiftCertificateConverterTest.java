@@ -4,8 +4,6 @@ import com.epam.esm.domain.dto.GiftCertificateDto;
 import com.epam.esm.domain.dto.TagDto;
 import com.epam.esm.domain.entity.GiftCertificate;
 import com.epam.esm.domain.entity.Tag;
-import com.epam.esm.service.converter.impl.GiftCertificateConverter;
-import com.epam.esm.service.converter.impl.TagConverter;
 import com.epam.esm.service.mapper.GiftCertificateMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
@@ -25,7 +23,6 @@ class GiftCertificateConverterTest {
 
     private GiftCertificate certificate;
     private GiftCertificateDto certificateDto;
-    private GiftCertificateConverter giftCertificateConverter = new GiftCertificateConverter(new TagConverter());
 
     @BeforeAll
     public void setup() {
@@ -51,32 +48,15 @@ class GiftCertificateConverterTest {
     }
 
     @Test
-    void convertToDto() {
-        GiftCertificateDto actual = giftCertificateConverter.convertToDto(certificate);
-        GiftCertificateDto expected = certificateDto;
-        actual.getTags().sort(Comparator.comparing(TagDto::getTagId));
-
-        Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
-    void test(){
+    void convertToDto(){
         GiftCertificateDto actual = GiftCertificateMapper.INSTANCE.mapToDto(certificate);
         GiftCertificateDto expected = certificateDto;
 
         Assertions.assertEquals(expected, actual);
     }
     @Test
-    void test2(){
+    void convertToEntity(){
         GiftCertificate actual = GiftCertificateMapper.INSTANCE.mapToEntity(certificateDto);
-        GiftCertificate expected = certificate;
-
-        Assertions.assertEquals(expected, actual);
-    }
-
-    @Test
-    void convertToEntity() {
-        GiftCertificate actual = giftCertificateConverter.convertToEntity(certificateDto);
         GiftCertificate expected = certificate;
 
         Assertions.assertEquals(expected, actual);

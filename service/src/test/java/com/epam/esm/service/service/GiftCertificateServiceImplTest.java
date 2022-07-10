@@ -8,24 +8,16 @@ import com.epam.esm.repository.dao.GiftCertificateDao;
 import com.epam.esm.repository.dao.TagDao;
 import com.epam.esm.repository.dao.impl.GiftCertificateDaoImpl;
 import com.epam.esm.repository.dao.impl.TagDaoImpl;
-import com.epam.esm.service.config.ServiceConfigTest;
-import com.epam.esm.service.converter.impl.GiftCertificateConverter;
-import com.epam.esm.service.converter.impl.TagConverter;
+import com.epam.esm.service.mapper.GiftCertificateMapper;
 import com.epam.esm.service.service.impl.GiftCertificateServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -75,12 +67,10 @@ class GiftCertificateServiceImplTest {
 
         tags.remove(2);
 
-        TagConverter tagConverter = new TagConverter();
-        GiftCertificateConverter giftCertificateConverter = new GiftCertificateConverter(tagConverter);
-        giftCertificateService = new GiftCertificateServiceImpl(giftCertificateDao, tagDao, giftCertificateConverter, tagConverter);
+        giftCertificateService = new GiftCertificateServiceImpl(giftCertificateDao, tagDao);
 
-        sampleDto = giftCertificateConverter.convertToDto(sample);
-        updatedDto = giftCertificateConverter.convertToDto(updatedSample);
+        sampleDto = GiftCertificateMapper.INSTANCE.mapToDto(sample);
+        updatedDto = GiftCertificateMapper.INSTANCE.mapToDto(updatedSample);
     }
 
     @Test
