@@ -16,7 +16,7 @@ public class UserConverter implements DtoEntityConverter<UserDto, User> {
     /**
      * The Order converter.
      */
-    final OrderConverter orderConverter;
+    OrderConverter orderConverter;
 
     /**
      * Instantiates a new User converter.

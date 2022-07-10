@@ -17,6 +17,6 @@ import java.time.LocalDateTime;
 @Relation(collectionRelation = "orderDetails")
 public class OrderDetailDto  extends RepresentationModel<OrderDetailDto> {
     private long orderDetailId;
-    private long giftCertificateId;
     private Double price;
+    private long giftCertificateId;
 }

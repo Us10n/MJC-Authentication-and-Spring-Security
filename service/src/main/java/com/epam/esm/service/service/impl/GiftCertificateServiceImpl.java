@@ -9,6 +9,7 @@ import com.epam.esm.repository.dao.TagDao;
 import com.epam.esm.service.converter.impl.GiftCertificateConverter;
 import com.epam.esm.service.converter.impl.TagConverter;
 import com.epam.esm.service.exception.*;
+import com.epam.esm.service.exception.NoSuchElementException;
 import com.epam.esm.service.service.GiftCertificateService;
 import com.epam.esm.service.util.handler.DateHandler;
 import com.epam.esm.service.util.validator.GiftCertificateCriteriaValidator;
@@ -18,10 +19,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.epam.esm.service.exception.ExceptionMessageKey.GIFT_CERTIFICATE_EXIST;
@@ -77,7 +75,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
         List<Tag> newTags = new ArrayList<>(certificateModel.getTags());
         List<Tag> tagsToPersist = createTagListToPersist(newTags);
-        certificateModel.setTags(new HashSet<>(tagsToPersist));
+        certificateModel.setTags(new LinkedHashSet<>(tagsToPersist));
         GiftCertificate createdCertificate = giftCertificateDao.create(certificateModel);
 
         return giftCertificateConverter.convertToDto(createdCertificate);
@@ -154,7 +152,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 .map(tagConverter::convertToEntity)
                 .collect(Collectors.toList());
         List<Tag> tagsToPersist = createTagListToPersist(newTags);
-        certificateModel.setTags(new HashSet<>(tagsToPersist));
+        certificateModel.setTags(new LinkedHashSet<>(tagsToPersist));
         GiftCertificate updatedCertificate = giftCertificateDao.update(certificateModel);
 
         return giftCertificateConverter.convertToDto(updatedCertificate);

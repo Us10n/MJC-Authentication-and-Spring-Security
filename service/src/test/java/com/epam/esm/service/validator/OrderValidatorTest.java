@@ -3,6 +3,7 @@ package com.epam.esm.service.validator;
 import com.epam.esm.domain.dto.OrderInputDto;
 import com.epam.esm.service.exception.ExceptionHolder;
 import com.epam.esm.service.util.validator.OrderValidator;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -38,9 +39,9 @@ public class OrderValidatorTest {
 
     @Test
     void isOrderValidPositive() {
-        OrderInputDto order=new OrderInputDto(1,1);
+        OrderInputDto order=new OrderInputDto(1L, Lists.list(1L));
         ExceptionHolder exceptionHolder=new ExceptionHolder();
-        OrderValidator.isOrderValid(order,exceptionHolder);
+        OrderValidator.isOrderInputDtoValid(order,exceptionHolder);
 
         boolean status=exceptionHolder.getExceptionMessages().isEmpty();
         Assertions.assertTrue(status);
@@ -48,9 +49,9 @@ public class OrderValidatorTest {
 
     @Test
     void isOrderValidNegative() {
-        OrderInputDto order=new OrderInputDto(0,1);
+        OrderInputDto order=new OrderInputDto(1L, null);
         ExceptionHolder exceptionHolder=new ExceptionHolder();
-        OrderValidator.isOrderValid(order,exceptionHolder);
+        OrderValidator.isOrderInputDtoValid(order,exceptionHolder);
 
         boolean status=exceptionHolder.getExceptionMessages().isEmpty();
         Assertions.assertFalse(status);

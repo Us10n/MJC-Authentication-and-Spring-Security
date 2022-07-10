@@ -17,8 +17,12 @@ import java.util.stream.Collectors;
 @Component
 public class OrderConverter implements DtoEntityConverter<OrderDto, Order> {
 
+    private final OrderDetailConverter orderDetailConverter;
+
     @Autowired
-    private OrderDetailConverter orderDetailConverter;
+    public OrderConverter(OrderDetailConverter orderDetailConverter) {
+        this.orderDetailConverter = orderDetailConverter;
+    }
 
     @Override
     public OrderDto convertToDto(Order object) {
@@ -31,7 +35,7 @@ public class OrderConverter implements DtoEntityConverter<OrderDto, Order> {
                 .stream()
                 .map(orderDetailConverter::convertToDto)
                 .collect(Collectors.toList());
-        orderDto.setOrderDetailDtos(orderDetailDtos);
+        orderDto.setOrderDetails(orderDetailDtos);
 
         return orderDto;
     }
@@ -42,7 +46,7 @@ public class OrderConverter implements DtoEntityConverter<OrderDto, Order> {
         order.setId(object.getOrderId());
         order.setPurchaseTime(object.getPurchaseTime());
 
-        List<OrderDetail> orderDetail = object.getOrderDetailDtos()
+        List<OrderDetail> orderDetail = object.getOrderDetails()
                 .stream()
                 .map(orderDetailConverter::convertToEntity)
                 .collect(Collectors.toList());

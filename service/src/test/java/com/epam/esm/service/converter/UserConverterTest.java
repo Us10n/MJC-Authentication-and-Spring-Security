@@ -3,10 +3,12 @@ package com.epam.esm.service.converter;
 import com.epam.esm.domain.dto.UserDto;
 import com.epam.esm.domain.dto.UserRole;
 import com.epam.esm.domain.entity.GiftCertificate;
-import com.epam.esm.domain.entity.OrderDetail;
+import com.epam.esm.domain.entity.Order;
 import com.epam.esm.domain.entity.User;
 import com.epam.esm.service.converter.impl.OrderConverter;
+import com.epam.esm.service.converter.impl.OrderDetailConverter;
 import com.epam.esm.service.converter.impl.UserConverter;
+import com.epam.esm.service.mapper.UserMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -26,7 +28,7 @@ class UserConverterTest {
 
     private User user;
     private UserDto userDto;
-    private UserConverter userConverter = new UserConverter(new OrderConverter());
+    private UserConverter userConverter = new UserConverter(new OrderConverter(new OrderDetailConverter()));
 
     @BeforeAll
     public void setup() {
@@ -36,8 +38,8 @@ class UserConverterTest {
                 1, "test1", "test1", 1.2, 1, sampleDate, sampleDate, null
         );
 
-        List<OrderDetail> orders = new ArrayList<>();
-        orders.add(new OrderDetail(1, 1.1, sampleDate, userTmp, giftCertificate));
+        List<Order> orders = new ArrayList<>();
+        orders.add(new Order(1, userTmp, sampleDate, null));
 
         user = new User(1, "Rick@email.com", "password", "Rick", UserRole.USER.toString(), orders);
         userDto = new UserDto(1, "Rick@email.com", "password", "Rick", UserRole.USER);
@@ -47,6 +49,21 @@ class UserConverterTest {
     void convertToDto() {
         UserDto actual = userConverter.convertToDto(user);
         UserDto expected = new UserDto(1, "Rick@email.com", "password", "Rick", UserRole.USER);
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void test(){
+        UserDto actual = UserMapper.INSTANCE.mapToDto(user);
+        UserDto expected = new UserDto(1, "Rick@email.com", "password", "Rick", UserRole.USER);
+
+        Assertions.assertEquals(expected, actual);
+    }
+    @Test
+    void test2(){
+        User actual = UserMapper.INSTANCE.mapToEntity(userDto);
+        User expected = new User(1, "Rick@email.com", "password", "Rick", UserRole.USER.toString(), null);
 
         Assertions.assertEquals(expected, actual);
     }

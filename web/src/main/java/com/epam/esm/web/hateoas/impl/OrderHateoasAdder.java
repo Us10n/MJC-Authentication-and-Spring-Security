@@ -25,7 +25,7 @@ public class OrderHateoasAdder implements HateoasAdder<OrderDto> {
         entity.add(linkTo(methodOn(ORDER_CONTROLLER).readOrdersByUserId(entity.getUserId(), 1, 10)).withRel("userOrders").withType("GET"));
         OrderInputDto order = new OrderInputDto(
                 entity.getUserId(),
-                entity.getOrderDetailDtos()
+                entity.getOrderDetails()
                         .stream()
                         .map(OrderDetailDto::getGiftCertificateId)
                         .collect(Collectors.toList())

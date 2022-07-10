@@ -81,7 +81,6 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderDetails(orderDetails);
         Order createdOrder = orderDao.create(order);
 
-
         return orderConverter.convertToDto(createdOrder);
     }
 

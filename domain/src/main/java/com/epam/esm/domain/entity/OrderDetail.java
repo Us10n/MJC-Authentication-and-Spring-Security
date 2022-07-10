@@ -24,7 +24,7 @@ public class OrderDetail {
     @Column(name = "price")
     private Double price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "gift_certificate_id")
     private GiftCertificate giftCertificate;
 }

@@ -17,5 +17,5 @@ public class OrderDto extends RepresentationModel<OrderDto> {
     private long orderId;
     private long userId;
     private LocalDateTime purchaseTime;
-    private List<OrderDetailDto> orderDetailDtos;
+    private List<OrderDetailDto> orderDetails;
 }

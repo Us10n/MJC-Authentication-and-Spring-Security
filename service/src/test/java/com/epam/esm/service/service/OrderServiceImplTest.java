@@ -1,8 +1,10 @@
 package com.epam.esm.service.service;
 
 import com.epam.esm.domain.dto.OrderDetailDto;
-import com.epam.esm.domain.entity.GiftCertificate;
+import com.epam.esm.domain.dto.OrderDto;
 import com.epam.esm.domain.dto.OrderInputDto;
+import com.epam.esm.domain.entity.GiftCertificate;
+import com.epam.esm.domain.entity.Order;
 import com.epam.esm.domain.entity.OrderDetail;
 import com.epam.esm.domain.entity.User;
 import com.epam.esm.repository.dao.GiftCertificateDao;
@@ -12,7 +14,9 @@ import com.epam.esm.repository.dao.impl.GiftCertificateDaoImpl;
 import com.epam.esm.repository.dao.impl.OrderDaoImpl;
 import com.epam.esm.repository.dao.impl.UserDaoImpl;
 import com.epam.esm.service.converter.impl.OrderConverter;
+import com.epam.esm.service.converter.impl.OrderDetailConverter;
 import com.epam.esm.service.service.impl.OrderServiceImpl;
+import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,57 +47,57 @@ class OrderServiceImplTest {
             1, "test1", "test1", 1.1, 1, sampleDate, sampleDate, null
     );
     private OrderService orderService;
-    private List<OrderDetail> orders;
-    private List<OrderDetailDto> orderDtos;
+    private List<Order> orders;
+    private List<OrderDto> orderDtos;
 
     @BeforeEach
     void setUp() {
         orders = new ArrayList<>();
-        orders.add(new OrderDetail(1, 1.1, sampleDate, sampleUser, sampleCertificate));
+        orders.add(new Order(1, sampleUser, sampleDate, Lists.list(new OrderDetail(1, 1.1, sampleCertificate))));
         orderDtos = new ArrayList<>();
-        orderDtos.add(new OrderDetailDto(1, 1.1, sampleDate, 1, 1));
+        orderDtos.add(new OrderDto(1, 1, sampleDate, Lists.list(new OrderDetailDto(1, 1.1, 1))));
 
         Mockito.when(userDao.findById(1)).thenReturn(Optional.of(sampleUser));
         Mockito.when(giftCertificateDao.findById(1)).thenReturn(Optional.of(sampleCertificate));
-        Mockito.when(orderDao.create(Mockito.any(OrderDetail.class))).thenReturn(orders.get(0));
+        Mockito.when(orderDao.create(Mockito.any(Order.class))).thenReturn(orders.get(0));
         Mockito.when(orderDao.countAll()).thenReturn(1L);
         Mockito.when(orderDao.findAll(1, 10)).thenReturn(orders);
         Mockito.when(orderDao.findById(1)).thenReturn(Optional.of(orders.get(0)));
         Mockito.when(giftCertificateDao.countAll()).thenReturn(1L);
         Mockito.when(orderDao.findOrdersByUserId(1, 1, 10)).thenReturn(orders);
 
-        orderService = new OrderServiceImpl(orderDao, new OrderConverter(), userDao, giftCertificateDao);
+        orderService = new OrderServiceImpl(orderDao, new OrderConverter(new OrderDetailConverter()), userDao, giftCertificateDao);
     }
 
     @Test
     void create() {
-        OrderInputDto order = new OrderInputDto(1, 1);
-        OrderDetailDto actual = orderService.create(order);
-        OrderDetailDto expected = new OrderDetailDto(1, 1.1, sampleDate, 1, 1);
+        OrderInputDto order = new OrderInputDto(1L, Lists.list(1L));
+        OrderDto actual = orderService.create(order);
+        OrderDto expected = new OrderDto(1, 1, sampleDate, Lists.list(new OrderDetailDto(1, 1.1, 1)));
 
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
     void readAll() {
-        List<OrderDetailDto> actual = new ArrayList<>(orderService.readAll(1, 10).getContent());
-        List<OrderDetailDto> expected = orderDtos;
+        List<OrderDto> actual = new ArrayList<>(orderService.readAll(1, 10).getContent());
+        List<OrderDto> expected = orderDtos;
 
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
     void readById() {
-        OrderDetailDto actual = orderService.readById(1);
-        OrderDetailDto expected = new OrderDetailDto(1, 1.1, sampleDate, 1, 1);
+        OrderDto actual = orderService.readById(1);
+        OrderDto expected = new OrderDto(1, 1, sampleDate, Lists.list(new OrderDetailDto(1, 1.1, 1)));
 
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
     void readOrdersByUserId() {
-        List<OrderDetailDto> actual = new ArrayList<>(orderService.readOrdersByUserId(1, 1, 10).getContent());
-        List<OrderDetailDto> expected = orderDtos;
+        List<OrderDto> actual = new ArrayList<>(orderService.readOrdersByUserId(1, 1, 10).getContent());
+        List<OrderDto> expected = orderDtos;
 
         Assertions.assertEquals(expected, actual);
     }

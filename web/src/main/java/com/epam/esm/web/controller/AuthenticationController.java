@@ -52,9 +52,9 @@ public class AuthenticationController {
 
     @PostMapping(value = "/register")
     @ResponseStatus(HttpStatus.OK)
-    public UserDto authorizeUser(@RequestBody UserDto userDto) {
+    public UserDto registerUser(@RequestBody UserDto userDto) {
         UserDto createdUser = userService.create(userDto);
         userHateoasAdder.addLinksToEntity(createdUser);
-        return userDto;
+        return createdUser;
     }
 }

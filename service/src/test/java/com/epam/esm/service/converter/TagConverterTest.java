@@ -3,6 +3,7 @@ package com.epam.esm.service.converter;
 import com.epam.esm.domain.dto.TagDto;
 import com.epam.esm.domain.entity.Tag;
 import com.epam.esm.service.converter.impl.TagConverter;
+import com.epam.esm.service.mapper.TagMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,21 @@ class TagConverterTest {
     void convertToDto() {
        TagDto actual =tagConverter.convertToDto(tag);
        TagDto expected = tagDto;
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void test(){
+        TagDto actual = TagMapper.INSTANCE.mapToDto(tag);
+        TagDto expected = tagDto;
+
+        Assertions.assertEquals(expected, actual);
+    }
+    @Test
+    void test2(){
+        Tag actual = TagMapper.INSTANCE.mapToEntity(tagDto);
+        Tag expected = tag;
 
         Assertions.assertEquals(expected, actual);
     }
