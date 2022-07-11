@@ -1,11 +1,11 @@
 package com.epam.esm.web.security;
 
-import com.epam.esm.service.service.UserDetailService;
 import com.epam.esm.service.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -22,14 +22,14 @@ public class JwtFilter extends OncePerRequestFilter {
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER = "Bearer ";
 
-    private UserDetailService userDetailService;
+    private UserDetailsService userDetailsService;
     private UserService userService;
     private JwtUtil jwtUtil;
 
     @Autowired
-    public JwtFilter(UserDetailService userDetailService, UserService userService,
+    public JwtFilter(UserDetailsService userDetailsService, UserService userService,
                      JwtUtil jwtUtil) {
-        this.userDetailService = userDetailService;
+        this.userDetailsService = userDetailsService;
         this.userService = userService;
         this.jwtUtil = jwtUtil;
     }
@@ -40,7 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (token != null && jwtUtil.isTokenValid(token)) {
             String login = jwtUtil.getLoginFromToken(token);
-            UserDetails userDetails = userDetailService.readByEmail(login);
+            UserDetails userDetails = userDetailsService.loadUserByUsername(login);
 
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(auth);

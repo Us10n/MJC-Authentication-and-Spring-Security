@@ -24,7 +24,7 @@ import java.util.Optional;
 class UserServiceImplTest {
 
     @Mock
-    private UserDao userDao=Mockito.mock(UserDaoImpl.class);
+    private UserDao userDao = Mockito.mock(UserDaoImpl.class);
     private UserService userService;
     List<User> userList = new ArrayList<>();
 
@@ -33,11 +33,34 @@ class UserServiceImplTest {
 
         userList.add(new User(1, "email@email.com", "qwerty1234", "Rick", UserRole.USER.toString(), null));
         userList.add(new User(2, "sam@email.com", "12345ada", "Sam", UserRole.USER.toString(), null));
+        userList.add(new User(3, "test@test.com", "qwerty1234", "Rick", UserRole.USER.toString(), null));
 
         Mockito.when(userDao.findById(1)).thenReturn(Optional.of(userList.get(0)));
+        Mockito.when(userDao.findById(0)).thenReturn(Optional.empty());
         Mockito.when(userDao.findAll(1, 10)).thenReturn(userList);
+        Mockito.when(userDao.create(Mockito.any(User.class))).thenReturn(userList.get(0));
+        Mockito.when(userDao.findByEmail("test@test.com")).thenReturn(Optional.ofNullable(userList.get(2)));
+        Mockito.when(userDao.findByEmail("email@email.com")).thenReturn(Optional.empty());
 
         userService = new UserServiceImpl(userDao, new BCryptPasswordEncoder());
+    }
+
+    @Test
+    void create() {
+        UserDto userDto = new UserDto(0, "email@email.com", "qwerty1234", "Rick", UserRole.USER);
+        UserDto actual = userService.create(userDto);
+        UserDto expected = new UserDto(1, "email@email.com", "qwerty1234", "Rick", UserRole.USER);
+
+        Assertions.assertEquals(expected, actual);
+    }
+
+    @Test
+    void readByEmail(){
+        UserDto userDto = new UserDto(0, "test@test.com", "qwerty1234", "Rick", UserRole.USER);
+        UserDto actual = userService.readByEmail("test@test.com");
+        UserDto expected = new UserDto(3, "test@test.com", "qwerty1234", "Rick", UserRole.USER);
+
+        Assertions.assertEquals(expected, actual);
     }
 
     @Test

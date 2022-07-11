@@ -8,15 +8,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig {
+public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private static final String ADMIN = "ADMIN";
 
     private final JwtFilter jwtFilter;
@@ -31,30 +34,30 @@ public class WebSecurityConfig {
         this.accessDeniedHandlerEntryPoint = accessDeniedHandlerEntryPoint;
     }
 
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
                 .csrf().disable()
                 .httpBasic().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().authorizeRequests()
+                .and()
+                .authorizeRequests()
                 //Guest
-                .antMatchers(HttpMethod.GET, "/giftCertificates/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/auth", "/register").permitAll()
+                    .antMatchers(HttpMethod.GET, "/giftCertificates/**").permitAll()
+                    .antMatchers(HttpMethod.POST, "/auth", "/register").permitAll()
                 //User
-                .antMatchers(HttpMethod.GET, "/tags/**", "/users/**", "/orders/**").fullyAuthenticated()
-                .antMatchers(HttpMethod.POST, "/orders").fullyAuthenticated()
+                    .antMatchers(HttpMethod.GET, "/tags/**", "/users/**", "/orders/**").fullyAuthenticated()
+                    .antMatchers(HttpMethod.POST, "/orders").fullyAuthenticated()
                 //Admin
-                .anyRequest().hasRole(ADMIN)
+                    .anyRequest().hasRole(ADMIN)
                 .and()
                 .exceptionHandling().accessDeniedHandler(accessDeniedHandlerEntryPoint).authenticationEntryPoint(authenticationHandlerEntryPoint)
                 .and()
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-                .build();
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
-    public AuthenticationManager authenticationManagerBean() {
-        return authentication -> authentication;
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 }

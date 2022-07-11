@@ -43,7 +43,7 @@ class TagDaoTest {
 
     @Test
     void findAll() {
-        Tag sample = new Tag(0, "world2");
+        Tag sample = new Tag(0, "world4");
         Tag created = tagDao.create(sample);
         boolean actual=tagDao.findAll(1,10).stream().anyMatch(tag -> tag.getId() == created.getId());
         Assertions.assertTrue(actual);
@@ -53,7 +53,7 @@ class TagDaoTest {
     void countAll() {
         long before = tagDao.countAll();
 
-        Tag sample = new Tag(0, "world2");
+        Tag sample = new Tag(0, "world5");
         Tag created = tagDao.create(sample);
         long after = tagDao.countAll();
         Assertions.assertEquals(before+1,after);
@@ -63,7 +63,7 @@ class TagDaoTest {
     void deleteById() {
         long before = tagDao.countAll();
 
-        Tag sample = new Tag(0, "world2");
+        Tag sample = new Tag(0, "world6");
         Tag created = tagDao.create(sample);
         tagDao.deleteById(created.getId());
         long after = tagDao.countAll();

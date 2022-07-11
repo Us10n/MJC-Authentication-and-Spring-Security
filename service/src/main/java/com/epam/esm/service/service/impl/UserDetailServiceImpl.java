@@ -4,12 +4,12 @@ import com.epam.esm.domain.entity.User;
 import com.epam.esm.repository.dao.UserDao;
 import com.epam.esm.service.exception.ExceptionHolder;
 import com.epam.esm.service.exception.IncorrectParameterException;
-import com.epam.esm.service.exception.NoSuchElementException;
-import com.epam.esm.service.service.UserDetailService;
 import com.epam.esm.service.util.validator.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -17,10 +17,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.epam.esm.service.exception.ExceptionMessageKey.BAD_USER_EMAIL;
-import static com.epam.esm.service.exception.ExceptionMessageKey.USER_NOT_FOUND;
 
 @Service
-public class UserDetailServiceImpl implements UserDetailService {
+public class UserDetailServiceImpl implements UserDetailsService {
 
     private static final String ROLE_PREFIX = "ROLE_";
 
@@ -32,7 +31,7 @@ public class UserDetailServiceImpl implements UserDetailService {
     }
 
     @Override
-    public UserDetails readByEmail(String email) {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         ExceptionHolder exceptionHolder = new ExceptionHolder();
 
         if (!UserValidator.isEmailValid(email)) {
@@ -42,7 +41,7 @@ public class UserDetailServiceImpl implements UserDetailService {
 
         Optional<User> optionalUser = userDao.findByEmail(email);
         User foundUser = optionalUser
-                .orElseThrow(() -> new NoSuchElementException(USER_NOT_FOUND));
+                .orElseThrow(() -> new UsernameNotFoundException("Unknown user: " + email));
 
         List<SimpleGrantedAuthority> authorities = Arrays.asList(new SimpleGrantedAuthority(ROLE_PREFIX
                 + foundUser.getRole()));

@@ -32,6 +32,7 @@ public final class ExceptionMessageKey {
     public static final String BAD_USER_NAME = "user.badName";
     public static final String USER_EXIST = "user.alreadyExist";
     public static final String USER_NOT_FOUND = "user.notFound";
+    public static final String USER_AUTH_EXCEPTION= "user.authException";
 
     public static final String BAD_ORDER_USER_ID = "order.badUserId";
     public static final String NO_USER_ID_VALUE = "order.noUserId";

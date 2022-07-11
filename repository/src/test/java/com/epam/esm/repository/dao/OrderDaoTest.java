@@ -20,7 +20,6 @@ import java.util.List;
 
 @ActiveProfiles("test")
 @SpringBootTest(classes = TestConfig.class)
-@SpringBootApplication
 class OrderDaoTest {
 
     @Autowired

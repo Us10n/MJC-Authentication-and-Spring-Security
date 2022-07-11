@@ -6,6 +6,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
@@ -23,6 +24,7 @@ public class ApiExceptionHandler {
     private static final String ERROR_CODE = "errorCode";
     private static final String WRONG_ARGS_TYPE = "info.wrong.args.type";
     private static final String JSON_PARSE_ERROR = "error.json.deserialize";
+    private static final String USER_AUTH_EXCEPTION = "user.authException";
     private static final String ERROR_UNEXPECTED = "error.unexpected";
 
     private MessageSource messageSource;
@@ -101,6 +103,16 @@ public class ApiExceptionHandler {
     public ResponseEntity<Map<String, String>> handleEmptyListRequestedException(EmptyListRequestedException ex, Locale locale) {
         Map<String, String> errorResponse = new HashMap<>();
         return new ResponseEntity<>(errorResponse, HttpStatus.OK);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public final ResponseEntity<Map<String, String>> handleBadCredentialsException(BadCredentialsException ex, Locale locale) {
+        Map<String, String> errorResponse = new HashMap<>();
+        String message = messageSource.getMessage(USER_AUTH_EXCEPTION, null, locale);
+
+        errorResponse.put(ERROR_MESSAGE, message);
+        errorResponse.put(ERROR_CODE, HttpStatus.UNAUTHORIZED.value() + VERSION);
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(Exception.class)
