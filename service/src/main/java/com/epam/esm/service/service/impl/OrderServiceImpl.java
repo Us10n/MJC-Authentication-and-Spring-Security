@@ -66,8 +66,14 @@ public class OrderServiceImpl implements OrderService {
         List<OrderDetail> orderDetails = new ArrayList<>();
         for (Long giftCertificateId : orderInputDto.getGiftCertificateIds()) {
             Optional<GiftCertificate> requestedCertificateOptional = giftCertificateDao.findById(giftCertificateId);
+            if (!requestedCertificateOptional.isPresent()) {
+                exceptionHolder.addException(GIFT_CERTIFICATE_NOT_FOUND_BY_ID, giftCertificateId);
+            }
             GiftCertificate requestedCertificate = requestedCertificateOptional
-                    .orElseThrow(() -> new NoSuchElementException(GIFT_CERTIFICATE_NOT_FOUND));
+                    .orElseThrow(() -> {
+                        exceptionHolder.addException(GIFT_CERTIFICATE_NOT_FOUND_BY_ID, giftCertificateId);
+                        return new IncorrectParameterException(exceptionHolder);
+                    });
 
             OrderDetail orderDetail = new OrderDetail();
             orderDetail.setGiftCertificate(requestedCertificate);

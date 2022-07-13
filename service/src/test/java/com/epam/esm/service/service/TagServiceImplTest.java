@@ -10,10 +10,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +24,11 @@ import java.util.stream.Collectors;
 
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(SpringExtension.class)
 class TagServiceImplTest {
 
     @Mock
-    private TagDao tagDao = Mockito.mock(TagDaoImpl.class);
+    private TagDao tagDao;
 
     private TagService tagService;
     List<TagDto> tagDtos = new ArrayList<>();

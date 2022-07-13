@@ -9,6 +9,7 @@ import static com.epam.esm.service.exception.ExceptionMessageKey.*;
 
 @UtilityClass
 public class UserValidator {
+    //example@example.com
     private static final String VALID_EMAIL_REGEX = "^[\\w!#$%&’*+/=?`{|}~^-]+(?:\\.[\\w!#$%&’*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
     private static final String VALID_NAME_REGEX = "^[A-Za-z][A-Za-z]{0,127}$";
     //Minimum eight characters, at least one letter and one number:

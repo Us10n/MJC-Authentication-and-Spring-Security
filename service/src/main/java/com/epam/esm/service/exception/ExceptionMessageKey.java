@@ -21,6 +21,7 @@ public final class ExceptionMessageKey {
     public static final String GIFT_CERTIFICATE_MUST_CONTAIN_TAGS = "certificate.badTagsAmount";
     public static final String GIFT_CERTIFICATE_EXIST = "certificate.alreadyExist";
     public static final String GIFT_CERTIFICATE_NOT_FOUND = "certificate.notFound";
+    public static final String GIFT_CERTIFICATE_NOT_FOUND_BY_ID = "certificate.notFoundById";
 
     public static final String BAD_TAG_NAME = "tag.badName";
     public static final String TAG_EXIST = "tag.alreadyExist";

@@ -1,6 +1,5 @@
 package com.epam.esm.web.security;
 
-import com.epam.esm.service.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,23 +13,20 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.security.Principal;
 
 import static org.springframework.util.StringUtils.hasText;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
     private static final String AUTHORIZATION = "Authorization";
-    private static final String BEARER = "Bearer ";
 
     private UserDetailsService userDetailsService;
-    private UserService userService;
     private JwtUtil jwtUtil;
 
     @Autowired
-    public JwtFilter(UserDetailsService userDetailsService, UserService userService,
-                     JwtUtil jwtUtil) {
+    public JwtFilter(UserDetailsService userDetailsService, JwtUtil jwtUtil) {
         this.userDetailsService = userDetailsService;
-        this.userService = userService;
         this.jwtUtil = jwtUtil;
     }
 

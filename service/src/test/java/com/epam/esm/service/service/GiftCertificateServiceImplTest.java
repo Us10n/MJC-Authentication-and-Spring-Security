@@ -14,22 +14,26 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(SpringExtension.class)
 class GiftCertificateServiceImplTest {
 
     @Mock
-    private GiftCertificateDao giftCertificateDao = Mockito.mock(GiftCertificateDaoImpl.class);
+    private static GiftCertificateDao giftCertificateDao;
     @Mock
-    private TagDao tagDao = Mockito.mock(TagDaoImpl.class);
+    private static TagDao tagDao;
 
     private GiftCertificateService giftCertificateService;
     private GiftCertificateDto sampleDto;

@@ -19,14 +19,14 @@ import java.util.Optional;
 import static com.epam.esm.service.exception.ExceptionMessageKey.BAD_USER_EMAIL;
 
 @Service
-public class UserDetailServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     private static final String ROLE_PREFIX = "ROLE_";
 
     private final UserDao userDao;
 
     @Autowired
-    public UserDetailServiceImpl(UserDao userDao) {
+    public UserDetailsServiceImpl(UserDao userDao) {
         this.userDao = userDao;
     }
 

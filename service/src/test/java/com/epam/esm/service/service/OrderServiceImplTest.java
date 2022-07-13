@@ -19,9 +19,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -30,14 +32,15 @@ import java.util.Optional;
 
 @ActiveProfiles("test")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(SpringExtension.class)
 class OrderServiceImplTest {
 
     @Mock
-    private OrderDao orderDao = Mockito.mock(OrderDaoImpl.class);
+    private OrderDao orderDao;
     @Mock
-    private UserDao userDao = Mockito.mock(UserDaoImpl.class);
+    private UserDao userDao;
     @Mock
-    private GiftCertificateDao giftCertificateDao = Mockito.mock(GiftCertificateDaoImpl.class);
+    private GiftCertificateDao giftCertificateDao;
 
     LocalDateTime sampleDate = LocalDateTime.parse("2022-04-11T10:00:11.156");
     User sampleUser = new User(1, "Nick", null, null, null, new ArrayList<>());

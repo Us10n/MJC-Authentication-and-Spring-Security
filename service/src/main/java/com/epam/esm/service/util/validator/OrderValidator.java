@@ -34,10 +34,6 @@ public class OrderValidator {
         return certId != null && certId > 0;
     }
 
-    private void validateGiftCertificateIds(List<Long> certIds, ExceptionHolder holder) {
-
-    }
-
     /**
      * Is order valid.
      *

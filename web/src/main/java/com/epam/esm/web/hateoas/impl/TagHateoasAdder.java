@@ -35,7 +35,7 @@ public class TagHateoasAdder implements HateoasAdder<TagDto> {
         if (page > 1) {
             model.add(linkTo(methodOn(TAG_CONTROLLER).readAllTags(page - 1, limit)).withRel("prev").withType("GET"));
         }
-        model.add(linkTo(methodOn(TAG_CONTROLLER).readWidelyUsedTag(page,limit)).withRel("popular").withType("GET"));
+        model.add(linkTo(methodOn(TAG_CONTROLLER).readWidelyUsedTag(page, limit)).withRel("popular").withType("GET"));
         model.getContent().forEach(this::addLinksToEntity);
 
     }
